@@ -8,7 +8,7 @@
 
   <body>
     <div class="container">
-      <ul class="comments">
+      <ul id="listOfComments" class="comments">
         <li class="comment">
           <div class="comment-header">
             <div>Глеб Фокин</div>
@@ -39,32 +39,92 @@
           <div class="comment-footer">
             <div class="likes">
               <span class="likes-counter">75</span>
-              <button class="like-button -active-like"></button>
+              <button id="likeButton" class="like-button -active-like"></button>
             </div>
           </div>
         </li>
       </ul>
       <div class="add-form">
-        <input
+        <input id="inputName"
           type="text"
           class="add-form-name"
           placeholder="Введите ваше имя"
         />
-        <textarea
+        <textarea id="textComment"
           type="textarea"
           class="add-form-text"
           placeholder="Введите ваш коментарий"
           rows="4"
         ></textarea>
         <div class="add-form-row">
-          <button class="add-form-button">Написать</button>
+          <button id="addFormButton"  class="add-form-button">Написать</button>
         </div>
       </div>
     </div>
   </body>
+<style>
+  .error {
+    background-color: red;
+    }
+</style>
 
   <script>
     "use strict";
+   const listOfCommentsElement = document.getElementById('listOfComments');
+   const addFormButtonEl = document.getElementById('addFormButton');
+   const inputNameEl = document.getElementById('inputName');
+   const textCommentEl = document.getElementById('textComment');
+   const likeButtonEl = document.getElementById('likeButton');
+  
+
+   let currentDate = new Date();
+   const date = { year: 'numeric', month: 'numeric', day: 'numeric'};
+   const time = {hour: 'numeric', minute:'numeric'};
+   const dateOfCommmet = currentDate.toLocaleDateString('ru-Ru',date);
+   const timeOfComment = currentDate.toLocaleTimeString('ru-Ru',time);
+  
+ 
+   
+
+   addFormButtonEl.addEventListener('click', function (e) {
+   
+    inputNameEl.classList.remove('error');
+    textCommentEl.classList.remove('error');
+
+    if (inputNameEl.value === '') {
+      inputNameEl.classList.add('error');
+      return;
+    } 
+    if (textCommentEl.value === '') {
+      textCommentEl.classList.add('error');
+      return;
+    } 
+
+    const oldListOfComments = listOfCommentsElement.innerHTML;
+    listOfCommentsElement.innerHTML = oldListOfComments + 
+          `<li class="comment">
+          <div class="comment-header">
+            <div>${inputNameEl.value}</div>
+            <div>${dateOfCommmet + ' ' + timeOfComment}</div>
+          </div>
+          <div class="comment-body">
+            <div class="comment-text">
+              ${textCommentEl.value}
+            </div>
+          </div>
+          <div class="comment-footer">
+            <div class="likes">
+              <span class="likes-counter">0</span>
+              <button class="like-button -active-like"></button>
+            </div>
+          </div>
+        </li>`
+      
+  }
+  );
+   
+   
+     // body
     // Код писать здесь
     console.log("It works!");
   </script>
