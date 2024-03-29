@@ -75,22 +75,23 @@
    const inputNameEl = document.getElementById('inputName');
    const textCommentEl = document.getElementById('textComment');
    const likeButtonEl = document.getElementById('likeButton');
-  
 
    let currentDate = new Date();
    const date = { year: 'numeric', month: 'numeric', day: 'numeric'};
    const time = {hour: 'numeric', minute:'numeric'};
    const dateOfCommmet = currentDate.toLocaleDateString('ru-Ru',date);
    const timeOfComment = currentDate.toLocaleTimeString('ru-Ru',time);
-  
- 
    
 
    addFormButtonEl.addEventListener('click', function (e) {
    
     inputNameEl.classList.remove('error');
     textCommentEl.classList.remove('error');
-
+    if (inputNameEl.value === '' && textCommentEl.value === '') {
+      inputNameEl.classList.add('error');
+      textCommentEl.classList.add('error');
+      return;
+    } 
     if (inputNameEl.value === '') {
       inputNameEl.classList.add('error');
       return;
@@ -99,7 +100,7 @@
       textCommentEl.classList.add('error');
       return;
     } 
-
+    
     const oldListOfComments = listOfCommentsElement.innerHTML;
     listOfCommentsElement.innerHTML = oldListOfComments + 
           `<li class="comment">
@@ -119,13 +120,7 @@
             </div>
           </div>
         </li>`
-      
-  }
-  );
-   
-   
-     // body
-    // Код писать здесь
+  });
     console.log("It works!");
   </script>
 </html>
