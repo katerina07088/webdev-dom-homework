@@ -76,27 +76,29 @@
    const textCommentEl = document.getElementById('textComment');
    const likeButtonEl = document.getElementById('likeButton');
 
+   
+   
+
+   addFormButtonEl.addEventListener('click', function (e) {
+    
    let currentDate = new Date();
    const date = { year: 'numeric', month: 'numeric', day: 'numeric'};
    const time = {hour: 'numeric', minute:'numeric'};
    const dateOfCommmet = currentDate.toLocaleDateString('ru-Ru',date);
    const timeOfComment = currentDate.toLocaleTimeString('ru-Ru',time);
-   
 
-   addFormButtonEl.addEventListener('click', function (e) {
-   
     inputNameEl.classList.remove('error');
     textCommentEl.classList.remove('error');
-    if (inputNameEl.value === '' && textCommentEl.value === '') {
+    if (inputNameEl.value.trim() === '' && textCommentEl.value.trim() === '') {
       inputNameEl.classList.add('error');
       textCommentEl.classList.add('error');
       return;
     } 
-    if (inputNameEl.value === '') {
+    if (inputNameEl.value.trim() === '') {
       inputNameEl.classList.add('error');
       return;
     } 
-    if (textCommentEl.value === '') {
+    if (textCommentEl.value.trim() === '') {
       textCommentEl.classList.add('error');
       return;
     } 
