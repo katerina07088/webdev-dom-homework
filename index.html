@@ -7,9 +7,10 @@
   </head>
 
   <body>
-    <div class="container">
-      <ul id="listOfComments" class="comments">
-        <li class="comment">
+    <div id="container" class="container">
+      <ul id="listOfComments" class="comments"> 
+        
+        <!-- <li class="comment">
           <div class="comment-header">
             <div>Глеб Фокин</div>
             <div>12.02.22 12:18</div>
@@ -39,10 +40,10 @@
           <div class="comment-footer">
             <div class="likes">
               <span class="likes-counter">75</span>
-              <button id="likeButton" class="like-button -active-like"></button>
+              <button class="like-button -active-like"></button>
             </div>
           </div>
-        </li>
+        </li> -->
       </ul>
       <div class="add-form">
         <input id="inputName"
@@ -57,7 +58,7 @@
           rows="4"
         ></textarea>
         <div class="add-form-row">
-          <button id="addFormButton"  class="add-form-button">Написать</button>
+          <button id="addFormButton" class="add-form-button">Написать</button>
         </div>
       </div>
     </div>
@@ -70,59 +71,146 @@
 
   <script>
     "use strict";
+  
+
+
+    // элменты
    const listOfCommentsElement = document.getElementById('listOfComments');
    const addFormButtonEl = document.getElementById('addFormButton');
    const inputNameEl = document.getElementById('inputName');
    const textCommentEl = document.getElementById('textComment');
-   const likeButtonEl = document.getElementById('likeButton');
-
+   const likeCounterEl = document.querySelectorAll('.likes-counter')
    
-   
+   // массив комментариев и функция рендер
+   const comments = [
+    {
+    name:"Глеб Фокин",
+    date:"12.02.22 12:18",
+    text:"Это будет первый комментарий на этой странице",
+    likeCounter:"3", 
+    likeButton: false
+    },
+    {
+    name:"Варвара Н.",
+    date:"12.02.22 12:18",
+    text:"Мне нравится как оформлена эта страница! ❤",
+    likeCounter:"75",
+    likeButton: true
+    }
+  ];
+  const renderComments = () => {
+    const commentsHtml = comments.map((comment, index) => {
+      return`<li class="comment">
+          <div class="comment-header">
+            <div>${comment.name}</div>
+            <div>${comment.date}</div>
+          </div>
+          <div class="comment-body">
+            <div class="comment-text">
+              ${comment.text}
+            </div>
+          </div>
+          <div class="comment-footer">
+            <div class="likes">
+              <span class="likes-counter">${comment.likeCounter}</span>
+              <button class="like-button ${comment.likeButton ? '-active-like':''}" data-index='${index}'></button>     
+            </div>
+          </div>
+        </li>` 
+    })
+    .join("");
+    listOfCommentsElement.innerHTML = commentsHtml;
+    countLikes();
+  }
+  renderComments();
 
+  // функция счетчика лайков
+  function countLikes() {
+    const likeButtonElements = document.querySelectorAll('.like-button');
+    for (const likeEl of likeButtonElements) {
+      likeEl.addEventListener('click', function (e) {
+        e.stopPropagation();
+        const index = likeEl.dataset.index;
+        if(comments[index].likeButton){
+          comments[index].likeButton = false;
+          comments[index].likeCounter--;
+        } else{
+          comments[index].likeButton = true;
+          comments[index].likeCounter++;
+        }
+        renderComments()
+      });
+    }
+  }
+
+   //функции неактивной кнопки
+   const nonActiveButton = ()=> {
+    addFormButtonEl.disabled = true;
+    inputName.addEventListener('input', (event) => {
+  if(event.target.value === '') {
+    addFormButtonEl.disabled = true;
+   }else{
+    addFormButtonEl.disabled = false;
+  }
+  })
+  textCommentEl.addEventListener('input', (event) => {
+  if(event.target.value === '') {                   // что здесь значит target ?
+    addFormButtonEl.disabled = true;
+    } else {
+    addFormButtonEl.disabled = false;
+  }
+  })
+  }
+   nonActiveButton();
+
+
+ // обработчик кнопки написать комментарий
    addFormButtonEl.addEventListener('click', function (e) {
-    
+    e.stopPropagation();
    let currentDate = new Date();
    const date = { year: 'numeric', month: 'numeric', day: 'numeric'};
    const time = {hour: 'numeric', minute:'numeric'};
-   const dateOfCommmet = currentDate.toLocaleDateString('ru-Ru',date);
-   const timeOfComment = currentDate.toLocaleTimeString('ru-Ru',time);
-
+   let dateTimeOfCommmet = currentDate.toLocaleDateString('ru-Ru',date)+" " +currentDate.toLocaleTimeString('ru-Ru',time);
     inputNameEl.classList.remove('error');
     textCommentEl.classList.remove('error');
     if (inputNameEl.value.trim() === '' && textCommentEl.value.trim() === '') {
       inputNameEl.classList.add('error');
       textCommentEl.classList.add('error');
       return;
-    } 
-    if (inputNameEl.value.trim() === '') {
+    } if (inputNameEl.value.trim() === '') {
       inputNameEl.classList.add('error');
       return;
-    } 
-    if (textCommentEl.value.trim() === '') {
+    }  else if (textCommentEl.value.trim() === '') {
       textCommentEl.classList.add('error');
       return;
-    } 
-    
-    const oldListOfComments = listOfCommentsElement.innerHTML;
-    listOfCommentsElement.innerHTML = oldListOfComments + 
-          `<li class="comment">
-          <div class="comment-header">
-            <div>${inputNameEl.value}</div>
-            <div>${dateOfCommmet + ' ' + timeOfComment}</div>
-          </div>
-          <div class="comment-body">
-            <div class="comment-text">
-              ${textCommentEl.value}
-            </div>
-          </div>
-          <div class="comment-footer">
-            <div class="likes">
-              <span class="likes-counter">0</span>
-              <button class="like-button -active-like"></button>
-            </div>
-          </div>
-        </li>`
-  });
+    }  else {  
+      comments.push({
+        name:inputNameEl.value,
+        date:dateTimeOfCommmet,
+        text:textCommentEl.value,
+        likeCounter:0, 
+        likeButton: false
+        })
+         renderComments();
+         inputNameEl.value ="";     
+         textCommentEl.value ="";
+         nonActiveButton()
+     }
+    })
+
+        //добавление комментария через enter 
+  inputNameEl.addEventListener('keyup', (event) => {
+    if (event.which === 13) {
+        addFormButtonEl.click();
+        }
+   })
+   textCommentEl.addEventListener('keyup', (event) => {
+    if (event.which === 13) {
+      addFormButtonEl.click();
+        }
+   })
+
+
     console.log("It works!");
   </script>
 </html>
