@@ -60,6 +60,9 @@
         <div class="add-form-row">
           <button id="addFormButton" class="add-form-button">Написать</button>
         </div>
+        <div>
+          <button id="delete-button" class="delete-form-button">Удалить последний комментарий</button>
+        </div>
       </div>
     </div>
   </body>
@@ -80,6 +83,7 @@
    const inputNameEl = document.getElementById('inputName');
    const textCommentEl = document.getElementById('textComment');
    const likeCounterEl = document.querySelectorAll('.likes-counter')
+   const deleteButtonEl = document.getElementById('delete-button');
    
    // массив комментариев и функция рендер
    const comments = [
@@ -121,8 +125,10 @@
     .join("");
     listOfCommentsElement.innerHTML = commentsHtml;
     countLikes();
+    answerComment();
   }
   renderComments();
+  deleteComment()
 
   // функция счетчика лайков
   function countLikes() {
@@ -143,18 +149,27 @@
     }
   }
 
+  // функция удаления последнего комментария
+  function deleteComment() { 
+      deleteButtonEl.addEventListener('click', () => {
+        comments.pop();
+        renderComments();
+      })
+    }
+
+
    //функции неактивной кнопки
-   const nonActiveButton = ()=> {
+  function nonActiveButton () {
     addFormButtonEl.disabled = true;
     inputName.addEventListener('input', (event) => {
-  if(event.target.value === '') {
+  if(event.target.value.trim === '') {
     addFormButtonEl.disabled = true;
    }else{
     addFormButtonEl.disabled = false;
   }
   })
   textCommentEl.addEventListener('input', (event) => {
-  if(event.target.value === '') {                   // что здесь значит target ?
+  if(event.target.value.trim === '') {                   // что здесь значит target ?
     addFormButtonEl.disabled = true;
     } else {
     addFormButtonEl.disabled = false;
@@ -163,6 +178,10 @@
   }
    nonActiveButton();
 
+ // функция заменяющая теги на символы в тексте
+   function sanitize(text) {
+      return text.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('QUOTE_BEGIN', '<div class="quote">').replaceAll('QUOTE_END', '</div>');
+    }
 
  // обработчик кнопки написать комментарий
    addFormButtonEl.addEventListener('click', function (e) {
@@ -185,31 +204,42 @@
       return;
     }  else {  
       comments.push({
-        name:inputNameEl.value,
+        name:sanitize(inputNameEl.value),
         date:dateTimeOfCommmet,
-        text:textCommentEl.value,
+        text:sanitize(textCommentEl.value),
         likeCounter:0, 
         likeButton: false
         })
-         renderComments();
          inputNameEl.value ="";     
          textCommentEl.value ="";
-         nonActiveButton()
+        nonActiveButton()
+         renderComments();
+         deleteButtonEl()
+       
      }
     })
 
-        //добавление комментария через enter 
-  inputNameEl.addEventListener('keyup', (event) => {
-    if (event.which === 13) {
-        addFormButtonEl.click();
-        }
-   })
-   textCommentEl.addEventListener('keyup', (event) => {
-    if (event.which === 13) {
-      addFormButtonEl.click();
-        }
-   })
+     //функция ответа на комментарий
+    function answerComment() {
+      const commentHTML = document.querySelectorAll('.comment');
+      commentHTML.forEach((el, i) => {
+        el.addEventListener('click', () => {
+          textCommentEl.value = `QUOTE_BEGIN ${comments[i].name}\n ${comments[i].text} QUOTE_END`;
+        })
+      })
+    }
 
+        //добавление комментария через enter 
+  // inputNameEl.addEventListener('keyup', (event) => {
+  //   if (event.which === 13) {
+  //       addFormButtonEl.click();
+  //       }
+  //  })
+  //  textCommentEl.addEventListener('keyup', (event) => {
+  //   if (event.which === 13) {
+  //     addFormButtonEl.click();
+  //       }
+  //  })
 
     console.log("It works!");
   </script>
