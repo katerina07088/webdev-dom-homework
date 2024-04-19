@@ -211,7 +211,7 @@ let comments = [
     }
 
 
- // функция для формата времени, 
+ // функция для формата времени
    function addDateTimeofComments() {
    let currentDate = new Date();
    const date = { year: 'numeric', month: 'numeric', day: 'numeric'};
@@ -255,23 +255,23 @@ let comments = [
        // start 
     const postFetch = fetch("https://wedev-api.sky.pro/api/v1/:korotenko/comments",{
     method:"POST",
-    boby: JSON.stringify ({
+    body: JSON.stringify ({
       name:sanitize(inputNameEl.value),
-      text:sanitize(textCommentEl.value)
+      text:sanitize(textCommentEl.value),
     }),
   }).then((response) => {
     return response.json();
   }).then ((responseData) => {
     comments = responseData.comments;
   });
-getFetchPromise()
-
+getFetchPromise();
       // end
          inputNameEl.value ="";     
          textCommentEl.value ="";
-         nonActiveButton()
+         nonActiveButton();
          renderComments();
-         deleteComment()
+         deleteComment();
+         answerComment();
     });
 
 
