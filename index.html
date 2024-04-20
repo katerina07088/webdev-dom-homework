@@ -85,22 +85,7 @@
    
 
    // массив комментариев 
-let comments = [
-    // {
-    // name:"Глеб Фокин",
-    // date:"12.02.22 12:18",
-    // text:"Это будет первый комментарий на этой странице",
-    // likeCounter:"3", 
-    // likeButton: false
-    // },
-    // {
-    // name:"Варвара Н.",
-    // date:"12.02.22 12:18",
-    // text:"Мне нравится как оформлена эта страница! ❤",
-    // likeCounter:"75",
-    // likeButton: true
-    // }
-  ];
+let comments = [ ];
 
 // функция на получение данных из API
 function getFetchPromise () {
@@ -221,11 +206,6 @@ function getFetchPromise () {
 // обработчик кнопки написать комментарий
    addFormButtonEl.addEventListener('click', function (e) {
     e.stopPropagation();
-  //  let currentDate = new Date();
-  //  const date = { year: 'numeric', month: 'numeric', day: 'numeric'};
-  //  const time = {hour: 'numeric', minute:'numeric'};
-  //  let dateTimeOfCommmet = currentDate.toLocaleDateString('ru-Ru',date)+" " +currentDate.toLocaleTimeString('ru-Ru',time);
-
 
     inputNameEl.classList.remove('error');
     textCommentEl.classList.remove('error');
@@ -240,17 +220,7 @@ function getFetchPromise () {
       textCommentEl.classList.add('error');
       return;
     }  
-    //else {  
-        // comments.push({
-        // name:sanitize(inputNameEl.value),
-        // date:addDateTimeofComments(),
-        // text:sanitize(textCommentEl.value),
-        // likeCounter:0, 
-        // likeButton: false
-       // })
-
-
-       // start 
+    
     const postFetch = fetch("https://wedev-api.sky.pro/api/v1/:korotenko/comments",{
     method:"POST",
     body: JSON.stringify ({
@@ -258,17 +228,14 @@ function getFetchPromise () {
       text:sanitize(textCommentEl.value),
     }),
   })
-    .then((response) => {
-      return response;
-    })
-    .then((response) => {
+      .then((response) => {
       return response.json();
     })
     .then (() => {
       getFetchPromise();
     });
 
-      // end
+    
          inputNameEl.value ="";     
          textCommentEl.value ="";
          nonActiveButton();
