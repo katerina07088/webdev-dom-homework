@@ -74,8 +74,6 @@
 
   <script>
     "use strict";
-  
-
 
     // элменты
    const listOfCommentsElement = document.getElementById('listOfComments');
@@ -85,29 +83,42 @@
    const likeCounterEl = document.querySelectorAll('.likes-counter')
    const deleteButtonEl = document.getElementById('delete-button');
    
-   // массив комментариев и функция рендер
-   const comments = [
-    {
-    name:"Глеб Фокин",
-    date:"12.02.22 12:18",
-    text:"Это будет первый комментарий на этой странице",
-    likeCounter:"3", 
-    likeButton: false
-    },
-    {
-    name:"Варвара Н.",
-    date:"12.02.22 12:18",
-    text:"Мне нравится как оформлена эта страница! ❤",
-    likeCounter:"75",
-    likeButton: true
-    }
-  ];
+
+   // массив комментариев 
+let comments = [ ];
+
+// функция на получение данных из API
+function getFetchPromise () {
+   const fetchPromise = fetch("https://wedev-api.sky.pro/api/v1/:korotenko/comments",{
+    method:"GET"
+  })
+    .then((response) => {
+      return response.json();
+    })
+      .then((reponseData) => {
+     const appComments = reponseData.comments.map((comment) => {
+      return {
+        name: comment.author.name,
+        date: comment.date,
+        text: comment.text,
+        likeCounter: comment.likes,
+        likeButton: false,
+      };
+      });
+    comments = appComments;
+    renderComments()
+  });
+ };
+  getFetchPromise();
+
+
+  // функция рендер
   const renderComments = () => {
     const commentsHtml = comments.map((comment, index) => {
       return`<li class="comment">
           <div class="comment-header">
             <div>${comment.name}</div>
-            <div>${comment.date}</div>
+            <div>${addDateTimeofComments(comment.date)}</div>
           </div>
           <div class="comment-body">
             <div class="comment-text">
@@ -157,7 +168,6 @@
       })
     }
 
-
    //функции неактивной кнопки
   function nonActiveButton () {
     addFormButtonEl.disabled = true;
@@ -183,13 +193,20 @@
       return text.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('QUOTE_BEGIN', '<div class="quote">').replaceAll('QUOTE_END', '</div>');
     }
 
- // обработчик кнопки написать комментарий
-   addFormButtonEl.addEventListener('click', function (e) {
-    e.stopPropagation();
-   let currentDate = new Date();
+
+ // функция для формата времени
+   function addDateTimeofComments(commentDate) {
+   let currentDate = new Date(commentDate);
    const date = { year: 'numeric', month: 'numeric', day: 'numeric'};
    const time = {hour: 'numeric', minute:'numeric'};
    let dateTimeOfCommmet = currentDate.toLocaleDateString('ru-Ru',date)+" " +currentDate.toLocaleTimeString('ru-Ru',time);
+   return dateTimeOfCommmet;
+ }
+
+// обработчик кнопки написать комментарий
+   addFormButtonEl.addEventListener('click', function (e) {
+    e.stopPropagation();
+
     inputNameEl.classList.remove('error');
     textCommentEl.classList.remove('error');
     if (inputNameEl.value.trim() === '' && textCommentEl.value.trim() === '') {
@@ -202,22 +219,32 @@
     }  else if (textCommentEl.value.trim() === '') {
       textCommentEl.classList.add('error');
       return;
-    }  else {  
-      comments.push({
-        name:sanitize(inputNameEl.value),
-        date:dateTimeOfCommmet,
-        text:sanitize(textCommentEl.value),
-        likeCounter:0, 
-        likeButton: false
-        })
+    }  
+    
+    const postFetch = fetch("https://wedev-api.sky.pro/api/v1/:korotenko/comments",{
+    method:"POST",
+    body: JSON.stringify ({
+      name:sanitize(inputNameEl.value),
+      text:sanitize(textCommentEl.value),
+    }),
+  })
+      .then((response) => {
+      return response.json();
+    })
+    .then (() => {
+      getFetchPromise();
+    });
+
+    
          inputNameEl.value ="";     
          textCommentEl.value ="";
-        nonActiveButton()
+         nonActiveButton();
          renderComments();
-         deleteButtonEl()
-       
-     }
-    })
+         deleteComment();
+         answerComment();
+    });
+
+
 
      //функция ответа на комментарий
     function answerComment() {
