@@ -84,33 +84,7 @@
    const deleteButtonEl = document.getElementById('delete-button');
    
 
-   
-
-// функция на получение данных из API
-function getFetchPromise () {
-   const fetchPromise = fetch("https://wedev-api.sky.pro/api/v1/:korotenko/comments",{
-    method:"GET"
-  });
-  fetchPromise.then((response) => {
-    const jsonPromise = response.json().then((reponseData) => {
-     const appComments = reponseData.comments.map((comment) => {
-        return {
-        name: comment.author.name,
-        date: new Date (comment.date),
-        text: comment.text,
-        likeCounter: comment.likes,
-        likeButton: false,
-      };
-      });
-    comments = appComments;
-    renderComments()
-  });
- });
-}
-  getFetchPromise();
-
-
-// массив комментариев 
+   // массив комментариев 
 let comments = [
     // {
     // name:"Глеб Фокин",
@@ -128,14 +102,38 @@ let comments = [
     // }
   ];
 
- 
+// функция на получение данных из API
+function getFetchPromise () {
+   const fetchPromise = fetch("https://wedev-api.sky.pro/api/v1/:korotenko/comments",{
+    method:"GET"
+  })
+    .then((response) => {
+      return response.json();
+    })
+      .then((reponseData) => {
+     const appComments = reponseData.comments.map((comment) => {
+      return {
+        name: comment.author.name,
+        date: comment.date,
+        text: comment.text,
+        likeCounter: comment.likes,
+        likeButton: false,
+      };
+      });
+    comments = appComments;
+    renderComments()
+  });
+ };
+  getFetchPromise();
+
+
   // функция рендер
   const renderComments = () => {
     const commentsHtml = comments.map((comment, index) => {
       return`<li class="comment">
           <div class="comment-header">
             <div>${comment.name}</div>
-            <div>${comment.date}</div>
+            <div>${addDateTimeofComments(comment.date)}</div>
           </div>
           <div class="comment-body">
             <div class="comment-text">
@@ -212,8 +210,8 @@ let comments = [
 
 
  // функция для формата времени
-   function addDateTimeofComments() {
-   let currentDate = new Date();
+   function addDateTimeofComments(commentDate) {
+   let currentDate = new Date(commentDate);
    const date = { year: 'numeric', month: 'numeric', day: 'numeric'};
    const time = {hour: 'numeric', minute:'numeric'};
    let dateTimeOfCommmet = currentDate.toLocaleDateString('ru-Ru',date)+" " +currentDate.toLocaleTimeString('ru-Ru',time);
@@ -259,12 +257,17 @@ let comments = [
       name:sanitize(inputNameEl.value),
       text:sanitize(textCommentEl.value),
     }),
-  }).then((response) => {
-    return response.json();
-  }).then ((responseData) => {
-    comments = responseData.comments;
-  });
-getFetchPromise();
+  })
+    .then((response) => {
+      return response;
+    })
+    .then((response) => {
+      return response.json();
+    })
+    .then (() => {
+      getFetchPromise();
+    });
+
       // end
          inputNameEl.value ="";     
          textCommentEl.value ="";
