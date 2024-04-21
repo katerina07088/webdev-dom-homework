@@ -7,9 +7,16 @@
   </head>
 
   <body>
+
+    
     <div id="container" class="container">
+
+      <div id="commentHidden" class="comment comment-hidden">
+        <p class="comment-text-hidden "> Комментарии загружаются ... </p>
+      </div> 
+
       <ul id="listOfComments" class="comments"> 
-        
+
         <!-- <li class="comment">
           <div class="comment-header">
             <div>Глеб Фокин</div>
@@ -75,20 +82,24 @@
   <script>
     "use strict";
 
-    // элменты
+    // элементы
    const listOfCommentsElement = document.getElementById('listOfComments');
    const addFormButtonEl = document.getElementById('addFormButton');
    const inputNameEl = document.getElementById('inputName');
    const textCommentEl = document.getElementById('textComment');
    const likeCounterEl = document.querySelectorAll('.likes-counter')
    const deleteButtonEl = document.getElementById('delete-button');
+   const addFormEl = document.querySelector('add-form')
+   const commentHiddenEl =  document.getElementById('commentHidden');
    
 
    // массив комментариев 
 let comments = [ ];
 
 // функция на получение данных из API
+
 function getFetchPromise () {
+   commentHiddenEl.classList.remove('comment-hidden');
    const fetchPromise = fetch("https://wedev-api.sky.pro/api/v1/:korotenko/comments",{
     method:"GET"
   })
@@ -105,7 +116,9 @@ function getFetchPromise () {
         likeButton: false,
       };
       });
-    comments = appComments;
+    comments = appComments
+    commentHiddenEl.classList.add('comment-hidden');
+          
     renderComments()
   });
  };
@@ -221,6 +234,9 @@ function getFetchPromise () {
       return;
     }  
     
+    addFormButtonEl.disabled = true;
+    addFormButtonEl.textContent = "Комментарий добавляется...";
+
     const postFetch = fetch("https://wedev-api.sky.pro/api/v1/:korotenko/comments",{
     method:"POST",
     body: JSON.stringify ({
@@ -233,6 +249,8 @@ function getFetchPromise () {
     })
     .then (() => {
       getFetchPromise();
+      addFormButtonEl.disabled = false;
+      addFormButtonEl.textContent = "Написать";
     });
 
     
