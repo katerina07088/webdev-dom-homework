@@ -12,7 +12,7 @@
 
   <div id="container" class="container">
 
-    <div id="commentHidden" class="comment comment-hidden">
+    <div id="commentHidden" class="comment-style comment-hidden">
       <p class="comment-text-hidden "> Комментарии загружаются ... </p>
     </div>
 
@@ -150,10 +150,11 @@
       .join("");
     listOfCommentsElement.innerHTML = commentsHtml;
     countLikes();
+    nonActiveButton();
     answerComment();
-  }
+  };
   renderComments();
-  deleteComment()
+  deleteComment();
 
   // функция счетчика лайков
   function countLikes() {
@@ -172,6 +173,16 @@
         renderComments()
       });
     }
+  }
+
+    //функция ответа на комментарий
+    function answerComment() {
+    const commentHTML = document.querySelectorAll('.comment');
+    commentHTML.forEach((el, i) => {
+      el.addEventListener('click', () => {
+        textCommentEl.value = `QUOTE_BEGIN ${comments[i].name}\n ${comments[i].text} QUOTE_END`;
+      })
+    })
   }
 
   // функция удаления последнего комментария
@@ -200,13 +211,12 @@
       }
     })
   }
-  nonActiveButton();
+  //nonActiveButton();    здесь ее можно не вызывать, достаточно ее вызвать в рендере
 
   // функция заменяющая теги на символы в тексте
   function sanitize(text) {
     return text.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('QUOTE_BEGIN', '<div class="quote">').replaceAll('QUOTE_END', '</div>');
   }
-
 
   // функция для формата времени
   function addDateTimeofComments(commentDate) {
@@ -264,11 +274,6 @@
         addFormButtonEl.textContent = "Написать";
         inputNameEl.value = "";
         textCommentEl.value = "";
-        
-        renderComments();
-        nonActiveButton();
-        deleteComment();
-        answerComment();
       })
       .catch((error) => {
         addFormButtonEl.disabled = false;
@@ -278,15 +283,6 @@
       })
   });
 
-  //функция ответа на комментарий
-  function answerComment() {
-    const commentHTML = document.querySelectorAll('.comment');
-    commentHTML.forEach((el, i) => {
-      el.addEventListener('click', () => {
-        textCommentEl.value = `QUOTE_BEGIN ${comments[i].name}\n ${comments[i].text} QUOTE_END`;
-      })
-    })
-  }
 
   //добавление комментария через enter 
   // inputNameEl.addEventListener('keyup', (event) => {
