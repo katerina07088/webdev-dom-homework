@@ -1,23 +1,24 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Проект "Комменты"</title>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
 
-  <body>
+<head>
+  <title>Проект "Комменты"</title>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
 
-    
-    <div id="container" class="container">
+<body>
 
-      <div id="commentHidden" class="comment comment-hidden">
-        <p class="comment-text-hidden "> Комментарии загружаются ... </p>
-      </div> 
 
-      <ul id="listOfComments" class="comments"> 
+  <div id="container" class="container">
 
-        <!-- <li class="comment">
+    <div id="commentHidden" class="comment-style comment-hidden">
+      <p class="comment-text-hidden "> Комментарии загружаются ... </p>
+    </div>
+
+    <ul id="listOfComments" class="comments">
+
+      <!-- <li class="comment">
           <div class="comment-header">
             <div>Глеб Фокин</div>
             <div>12.02.22 12:18</div>
@@ -51,84 +52,84 @@
             </div>
           </div>
         </li> -->
-      </ul>
-      <div class="add-form">
-        <input id="inputName"
-          type="text"
-          class="add-form-name"
-          placeholder="Введите ваше имя"
-        />
-        <textarea id="textComment"
-          type="textarea"
-          class="add-form-text"
-          placeholder="Введите ваш коментарий"
-          rows="4"
-        ></textarea>
-        <div class="add-form-row">
-          <button id="addFormButton" class="add-form-button">Написать</button>
-        </div>
-        <div>
-          <button id="delete-button" class="delete-form-button">Удалить последний комментарий</button>
-        </div>
+    </ul>
+    <div class="add-form">
+      <input id="inputName" type="text" class="add-form-name" placeholder="Введите ваше имя" />
+      <textarea id="textComment" type="textarea" class="add-form-text" placeholder="Введите ваш коментарий"
+        rows="4"></textarea>
+      <div class="add-form-row">
+        <button id="addFormButton" class="add-form-button">Написать</button>
+      </div>
+      <div>
+        <button id="delete-button" class="delete-form-button">Удалить последний комментарий</button>
       </div>
     </div>
-  </body>
+  </div>
+</body>
 <style>
   .error {
     background-color: red;
-    }
+  }
 </style>
 
-  <script>
-    "use strict";
+<script>
+  "use strict";
 
-    // элементы
-   const listOfCommentsElement = document.getElementById('listOfComments');
-   const addFormButtonEl = document.getElementById('addFormButton');
-   const inputNameEl = document.getElementById('inputName');
-   const textCommentEl = document.getElementById('textComment');
-   const likeCounterEl = document.querySelectorAll('.likes-counter')
-   const deleteButtonEl = document.getElementById('delete-button');
-   const addFormEl = document.querySelector('add-form')
-   const commentHiddenEl =  document.getElementById('commentHidden');
-   
+  // элементы
+  const listOfCommentsElement = document.getElementById('listOfComments');
+  const addFormButtonEl = document.getElementById('addFormButton');
+  const inputNameEl = document.getElementById('inputName');
+  const textCommentEl = document.getElementById('textComment');
+  const likeCounterEl = document.querySelectorAll('.likes-counter')
+  const deleteButtonEl = document.getElementById('delete-button');
+  const addFormEl = document.querySelector('add-form')
+  const commentHiddenEl = document.getElementById('commentHidden');
 
-   // массив комментариев 
-let comments = [ ];
 
-// функция на получение данных из API
+  // массив комментариев 
+  let comments = [];
 
-function getFetchPromise () {
-   commentHiddenEl.classList.remove('comment-hidden');
-   const fetchPromise = fetch("https://wedev-api.sky.pro/api/v1/:korotenko/comments",{
-    method:"GET"
-  })
-    .then((response) => {
-      return response.json();
+  // функция на получение данных из API
+
+  function getFetchPromise() {
+    commentHiddenEl.classList.remove('comment-hidden');
+    const fetchPromise = fetch("https://wedev-api.sky.pro/api/v1/:korotenko/comments", {
+      method: "GET"
     })
+      .catch(() => {
+        throw new Error('Кажется, у вас сломался интернет, попробуйте позже');
+      })
+      .then((response) => {
+        if (response.status === 500) {
+          throw new Error("Сервер сломался, попробуй позже")
+        }
+        return response.json();
+      })
       .then((reponseData) => {
-     const appComments = reponseData.comments.map((comment) => {
-      return {
-        name: comment.author.name,
-        date: comment.date,
-        text: comment.text,
-        likeCounter: comment.likes,
-        likeButton: false,
-      };
-      });
-    comments = appComments
-    commentHiddenEl.classList.add('comment-hidden');
-          
-    renderComments()
-  });
- };
+        const appComments = reponseData.comments.map((comment) => {
+          return {
+            name: comment.author.name,
+            date: comment.date,
+            text: comment.text,
+            likeCounter: comment.likes,
+            likeButton: false,
+          };
+        })
+        comments = appComments
+        commentHiddenEl.classList.add('comment-hidden');
+        renderComments()
+      })
+      .catch((error) => {
+        alert(error.message);
+      })
+  };
   getFetchPromise();
 
 
   // функция рендер
   const renderComments = () => {
     const commentsHtml = comments.map((comment, index) => {
-      return`<li class="comment">
+      return `<li class="comment">
           <div class="comment-header">
             <div>${comment.name}</div>
             <div>${addDateTimeofComments(comment.date)}</div>
@@ -141,18 +142,19 @@ function getFetchPromise () {
           <div class="comment-footer">
             <div class="likes">
               <span class="likes-counter">${comment.likeCounter}</span>
-              <button class="like-button ${comment.likeButton ? '-active-like':''}" data-index='${index}'></button>     
+              <button class="like-button ${comment.likeButton ? '-active-like' : ''}" data-index='${index}'></button>     
             </div>
           </div>
-        </li>` 
+        </li>`
     })
-    .join("");
+      .join("");
     listOfCommentsElement.innerHTML = commentsHtml;
     countLikes();
+    nonActiveButton();
     answerComment();
-  }
+  };
   renderComments();
-  deleteComment()
+  deleteComment();
 
   // функция счетчика лайков
   function countLikes() {
@@ -161,10 +163,10 @@ function getFetchPromise () {
       likeEl.addEventListener('click', function (e) {
         e.stopPropagation();
         const index = likeEl.dataset.index;
-        if(comments[index].likeButton){
+        if (comments[index].likeButton) {
           comments[index].likeButton = false;
           comments[index].likeCounter--;
-        } else{
+        } else {
           comments[index].likeButton = true;
           comments[index].likeCounter++;
         }
@@ -173,51 +175,59 @@ function getFetchPromise () {
     }
   }
 
-  // функция удаления последнего комментария
-  function deleteComment() { 
-      deleteButtonEl.addEventListener('click', () => {
-        comments.pop();
-        renderComments();
+    //функция ответа на комментарий
+    function answerComment() {
+    const commentHTML = document.querySelectorAll('.comment');
+    commentHTML.forEach((el, i) => {
+      el.addEventListener('click', () => {
+        textCommentEl.value = `QUOTE_BEGIN ${comments[i].name}\n ${comments[i].text} QUOTE_END`;
       })
-    }
+    })
+  }
 
-   //функции неактивной кнопки
-  function nonActiveButton () {
+  // функция удаления последнего комментария
+  function deleteComment() {
+    deleteButtonEl.addEventListener('click', () => {
+      comments.pop();
+      renderComments();
+    })
+  }
+
+  //функции неактивной кнопки
+  function nonActiveButton() {
     addFormButtonEl.disabled = true;
     inputName.addEventListener('input', (event) => {
-  if(event.target.value.trim === '') {
-    addFormButtonEl.disabled = true;
-   }else{
-    addFormButtonEl.disabled = false;
+      if (event.target.value.trim === '') {
+        addFormButtonEl.disabled = true;
+      } else {
+        addFormButtonEl.disabled = false;
+      }
+    })
+    textCommentEl.addEventListener('input', (event) => {
+      if (event.target.value.trim === '') {                   // что здесь значит target ?
+        addFormButtonEl.disabled = true;
+      } else {
+        addFormButtonEl.disabled = false;
+      }
+    })
   }
-  })
-  textCommentEl.addEventListener('input', (event) => {
-  if(event.target.value.trim === '') {                   // что здесь значит target ?
-    addFormButtonEl.disabled = true;
-    } else {
-    addFormButtonEl.disabled = false;
+
+  // функция заменяющая теги на символы в тексте
+  function sanitize(text) {
+    return text.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('QUOTE_BEGIN', '<div class="quote">').replaceAll('QUOTE_END', '</div>');
   }
-  })
+
+  // функция для формата времени
+  function addDateTimeofComments(commentDate) {
+    let currentDate = new Date(commentDate);
+    const date = { year: 'numeric', month: 'numeric', day: 'numeric' };
+    const time = { hour: 'numeric', minute: 'numeric' };
+    let dateTimeOfCommmet = currentDate.toLocaleDateString('ru-Ru', date) + " " + currentDate.toLocaleTimeString('ru-Ru', time);
+    return dateTimeOfCommmet;
   }
-   nonActiveButton();
 
- // функция заменяющая теги на символы в тексте
-   function sanitize(text) {
-      return text.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('QUOTE_BEGIN', '<div class="quote">').replaceAll('QUOTE_END', '</div>');
-    }
-
-
- // функция для формата времени
-   function addDateTimeofComments(commentDate) {
-   let currentDate = new Date(commentDate);
-   const date = { year: 'numeric', month: 'numeric', day: 'numeric'};
-   const time = {hour: 'numeric', minute:'numeric'};
-   let dateTimeOfCommmet = currentDate.toLocaleDateString('ru-Ru',date)+" " +currentDate.toLocaleTimeString('ru-Ru',time);
-   return dateTimeOfCommmet;
- }
-
-// обработчик кнопки написать комментарий
-   addFormButtonEl.addEventListener('click', function (e) {
+  // обработчик кнопки написать комментарий
+  addFormButtonEl.addEventListener('click', function (e) {
     e.stopPropagation();
 
     inputNameEl.classList.remove('error');
@@ -229,52 +239,51 @@ function getFetchPromise () {
     } if (inputNameEl.value.trim() === '') {
       inputNameEl.classList.add('error');
       return;
-    }  else if (textCommentEl.value.trim() === '') {
+    } else if (textCommentEl.value.trim() === '') {
       textCommentEl.classList.add('error');
       return;
-    }  
-    
+    }
+
     addFormButtonEl.disabled = true;
     addFormButtonEl.textContent = "Комментарий добавляется...";
 
-    const postFetch = fetch("https://wedev-api.sky.pro/api/v1/:korotenko/comments",{
-    method:"POST",
-    body: JSON.stringify ({
-      name:sanitize(inputNameEl.value),
-      text:sanitize(textCommentEl.value),
-    }),
-  })
-      .then((response) => {
-      return response.json();
+    const postFetch = fetch("https://wedev-api.sky.pro/api/v1/:korotenko/comments", {
+      method: "POST",
+      body: JSON.stringify({
+        name: sanitize(inputNameEl.value),
+        text: sanitize(textCommentEl.value),
+        forceError: true,
+      }),
     })
-    .then (() => {
-      getFetchPromise();
-      addFormButtonEl.disabled = false;
-      addFormButtonEl.textContent = "Написать";
-    });
-
-    
-         inputNameEl.value ="";     
-         textCommentEl.value ="";
-         nonActiveButton();
-         renderComments();
-         deleteComment();
-         answerComment();
-    });
-
-
-
-     //функция ответа на комментарий
-    function answerComment() {
-      const commentHTML = document.querySelectorAll('.comment');
-      commentHTML.forEach((el, i) => {
-        el.addEventListener('click', () => {
-          textCommentEl.value = `QUOTE_BEGIN ${comments[i].name}\n ${comments[i].text} QUOTE_END`;
-        })
+      .catch(() => {
+        throw new Error('Кажется, у вас сломался интернет, попробуйте позже');
       })
-    }
+      .then((response) => {
+        if (response.status === 201) {
+          return response.json();
+        } else if (response.status === 500) {
+          throw new Error('Сервер сломался, попробуй позже');
+        } else {
+          throw new Error('Имя и комментарий должны быть не короче 3 символов')
+        }
+      })
+      .then(() => {
+        getFetchPromise();
+        addFormButtonEl.disabled = false;
+        addFormButtonEl.textContent = "Написать";
+        inputNameEl.value = "";
+        textCommentEl.value = "";
+      })
+      .catch((error) => {
+        addFormButtonEl.disabled = false;
+        addFormButtonEl.textContent = "Написать";
+        alert(error.message);
+        console.warn(error);
+      })
+  });
 
-        //добавление комментария через enter 
+
+  //добавление комментария через enter 
   // inputNameEl.addEventListener('keyup', (event) => {
   //   if (event.which === 13) {
   //       addFormButtonEl.click();
@@ -286,6 +295,7 @@ function getFetchPromise () {
   //       }
   //  })
 
-    console.log("It works!");
-  </script>
+  console.log("It works!");
+</script>
+
 </html>
