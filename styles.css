@@ -174,3 +174,6 @@ body {
     font-size: 32px;
     white-space: pre-line;
   }
+  .error {
+    background-color: red;
+  }
