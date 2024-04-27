@@ -1,5 +1,7 @@
 "use strict";
 
+import { getComments, postComments } from "./api.js";
+
   // элементы
   const listOfCommentsElement = document.getElementById('listOfComments');
   const addFormButtonEl = document.getElementById('addFormButton');
@@ -18,18 +20,19 @@
 
   function getFetchPromise() {
     commentHiddenEl.classList.remove('comment-hidden');
-    const fetchPromise = fetch("https://wedev-api.sky.pro/api/v1/:korotenko/comments", {
-      method: "GET"
-    })
-      .catch(() => {
-        throw new Error('Кажется, у вас сломался интернет, попробуйте позже');
-      })
-      .then((response) => {
-        if (response.status === 500) {
-          throw new Error("Сервер сломался, попробуй позже")
-        }
-        return response.json();
-      })
+    const fetchPromise = getComments()
+    // fetch("https://wedev-api.sky.pro/api/v1/:korotenko/comments", {
+    //   method: "GET"
+    // })
+    //   .catch(() => {
+    //     throw new Error('Кажется, у вас сломался интернет, попробуйте позже');
+    //   })
+    //   .then((response) => {
+    //     if (response.status === 500) {
+    //       throw new Error("Сервер сломался, попробуй позже")
+    //     }
+    //     return response.json();
+    //   })
       .then((reponseData) => {
         const appComments = reponseData.comments.map((comment) => {
           return {
@@ -172,26 +175,29 @@
     addFormButtonEl.disabled = true;
     addFormButtonEl.textContent = "Комментарий добавляется...";
 
-    const postFetch = fetch("https://wedev-api.sky.pro/api/v1/:korotenko/comments", {
-      method: "POST",
-      body: JSON.stringify({
-        name: sanitize(inputNameEl.value),
-        text: sanitize(textCommentEl.value),
-        forceError: true,
-      }),
-    })
-      .catch(() => {
-        throw new Error('Кажется, у вас сломался интернет, попробуйте позже');
-      })
-      .then((response) => {
-        if (response.status === 201) {
-          return response.json();
-        } else if (response.status === 500) {
-          throw new Error('Сервер сломался, попробуй позже');
-        } else {
-          throw new Error('Имя и комментарий должны быть не короче 3 символов')
-        }
-      })
+    const postFetch = postComments({
+      name: sanitize(inputNameEl.value),
+      text: sanitize(textCommentEl.value)} )
+    // fetch("https://wedev-api.sky.pro/api/v1/:korotenko/comments", {
+    //   method: "POST",
+    //   body: JSON.stringify({
+    //     name: sanitize(inputNameEl.value),
+    //     text: sanitize(textCommentEl.value),
+    //     forceError: true,
+    //   }),
+    // })
+    //   .catch(() => {
+    //     throw new Error('Кажется, у вас сломался интернет, попробуйте позже');
+    //   })
+    //   .then((response) => {
+    //     if (response.status === 201) {
+    //       return response.json();
+    //     } else if (response.status === 500) {
+    //       throw new Error('Сервер сломался, попробуй позже');
+    //     } else {
+    //       throw new Error('Имя и комментарий должны быть не короче 3 символов')
+    //     }
+    //   })
       .then(() => {
         getFetchPromise();
         addFormButtonEl.disabled = false;
