@@ -9,7 +9,6 @@ import { renderComments } from "./render.js";
   const addFormButtonEl = document.getElementById('addFormButton');
   const inputNameEl = document.getElementById('inputName');
   const textCommentEl = document.getElementById('textComment');
-  //const likeCounterEl = document.querySelectorAll('.likes-counter');
   const deleteButtonEl = document.getElementById('delete-button');
   const addFormEl = document.querySelector('add-form')
   const commentHiddenEl = document.getElementById('commentHidden');
@@ -74,24 +73,7 @@ import { renderComments } from "./render.js";
   renderComments({comments});
  // deleteComment();
 
-  // функция счетчика лайков
-  // function countLikes({likeCounterEl}) {
-  //   const likeButtonElements = document.querySelectorAll('.like-button');
-  //   for (const likeEl of likeButtonElements) {
-  //     likeEl.addEventListener('click', function (e) {
-  //       e.stopPropagation();
-  //       const index = likeEl.dataset.index;
-  //       if (comments[index].likeButton) {
-  //         comments[index].likeButton = false;
-  //         comments[index].likeCounter--;
-  //       } else {
-  //         comments[index].likeButton = true;
-  //         comments[index].likeCounter++;
-  //       }
-  //       renderComments()
-  //     });
-  //   }
-  // }
+ 
     //функция ответа на комментарий
   //   function answerComment() {
   //   const commentHTML = document.querySelectorAll('.comment');

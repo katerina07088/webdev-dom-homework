@@ -1,8 +1,7 @@
+import { renderComments } from "./render.js";
 
-const likeCounterEl = document.querySelectorAll('.likes-counter');
-
-export function countLikes({likeCounterEl, comments}) {
-  
+export function countLikes({comments}) {
+      
       const likeButtonElements = document.querySelectorAll('.like-button');
       for (const likeEl of likeButtonElements) {
         likeEl.addEventListener('click', function (e) {
@@ -15,7 +14,7 @@ export function countLikes({likeCounterEl, comments}) {
             comments[index].likeButton = true;
             comments[index].likeCounter++;
           }
-          renderComments({comments})
+          renderComments({comments});
         });
       }
     }
