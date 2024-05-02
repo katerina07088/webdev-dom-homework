@@ -1,5 +1,7 @@
 import { addDateTimeofComments } from "./timeDate.js";
 import { countLikes } from "./countLikes.js";
+import { answerComment } from "./manipulationsWithComments.js";
+import { nonActiveButton } from "./manipulationsWithComments.js";
 
  const listOfCommentsElement = document.getElementById('listOfComments');
 
@@ -26,6 +28,7 @@ export const renderComments = ({comments}) => {
         .join("");
       listOfCommentsElement.innerHTML = commentsHtml;
       countLikes({comments});
-      //nonActiveButton();
-      //answerComment();
+      nonActiveButton({comments});
+      answerComment({comments});
     };
+   

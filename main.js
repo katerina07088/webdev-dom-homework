@@ -2,14 +2,16 @@
 
 import { getComments, postComments } from "./api.js";
 import { renderComments } from "./render.js";
+import { sanitize } from "./manipulationsWithComments.js"; // уйдет в клики
+//import { deleteComment } from "./manipulationsWithComments.js";
 
 
   // элементы
   //const listOfCommentsElement = document.getElementById('listOfComments');
   const addFormButtonEl = document.getElementById('addFormButton');
   const inputNameEl = document.getElementById('inputName');
-  const textCommentEl = document.getElementById('textComment');
-  const deleteButtonEl = document.getElementById('delete-button');
+  const textCommentEl = document.getElementById('textComment'); // здесь и в manipulationwithComents
+  //const deleteButtonEl = document.getElementById('delete-button');
   const addFormEl = document.querySelector('add-form')
   const commentHiddenEl = document.getElementById('commentHidden');
 
@@ -70,19 +72,11 @@ import { renderComments } from "./render.js";
   //   nonActiveButton();
   //   answerComment();
   // };
-  renderComments({comments});
- // deleteComment();
+  //renderComments({comments});
+  //deleteComment({comments});
 
  
-    //функция ответа на комментарий
-  //   function answerComment() {
-  //   const commentHTML = document.querySelectorAll('.comment');
-  //   commentHTML.forEach((el, i) => {
-  //     el.addEventListener('click', () => {
-  //       textCommentEl.value = `QUOTE_BEGIN ${comments[i].name}\n ${comments[i].text} QUOTE_END`;
-  //     })
-  //   })
-  // }
+   
 
   // функция удаления последнего комментария
   // function deleteComment() {
@@ -92,29 +86,6 @@ import { renderComments } from "./render.js";
   //   })
   // }
 
-  // функции неактивной кнопки
-  // function nonActiveButton() {
-  //   addFormButtonEl.disabled = true;
-  //   inputName.addEventListener('input', (event) => {
-  //     if (event.target.value.trim === '') {
-  //       addFormButtonEl.disabled = true;
-  //     } else {
-  //       addFormButtonEl.disabled = false;
-  //     }
-  //   })
-  //   textCommentEl.addEventListener('input', (event) => {
-  //     if (event.target.value.trim === '') {                   // что здесь значит target ?
-  //       addFormButtonEl.disabled = true;
-  //     } else {
-  //       addFormButtonEl.disabled = false;
-  //     }
-  //   })
-  // }
-
-  // функция заменяющая теги на символы в тексте
-  function sanitize(text) {
-    return text.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('QUOTE_BEGIN', '<div class="quote">').replaceAll('QUOTE_END', '</div>');
-  }
 
   // обработчик кнопки написать комментарий
   addFormButtonEl.addEventListener('click', function (e) {
