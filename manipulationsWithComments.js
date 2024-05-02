@@ -1,7 +1,8 @@
 import { renderComments } from "./render.js";
 const textCommentEl = document.getElementById('textComment');
 const addFormButtonEl = document.getElementById('addFormButton');
-//const deleteButtonEl = document.getElementById('delete-button');
+const deleteButtonEl = document.getElementById('delete-button');
+
 
 //функция ответа на комментарий
 export function answerComment({ comments }) {
@@ -14,12 +15,12 @@ export function answerComment({ comments }) {
 }
 
 // функция удаления последнего комментария
-//   export function deleteComment({comments}) {
-//     deleteButtonEl.addEventListener('click', () => {
-//       comments.pop();
-//       renderComments({comments});
-//     })
-//   }
+  export function deleteComment({comments}) {
+    deleteButtonEl.addEventListener('click', () => {
+      comments.pop();
+      renderComments({comments});
+    })
+  }
 
 // функции неактивной кнопки
 export function nonActiveButton() {

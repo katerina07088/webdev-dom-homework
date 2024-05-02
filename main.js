@@ -2,12 +2,11 @@
 
 import { getComments, postComments } from "./api.js";
 import { renderComments } from "./render.js";
-import { sanitize } from "./manipulationsWithComments.js"; // уйдет в клики
-//import { deleteComment } from "./manipulationsWithComments.js";
+import { sanitize,deleteComment } from "./manipulationsWithComments.js"; 
 
 
   // элементы
-  //const listOfCommentsElement = document.getElementById('listOfComments');
+ 
   const addFormButtonEl = document.getElementById('addFormButton');
   const inputNameEl = document.getElementById('inputName');
   const textCommentEl = document.getElementById('textComment'); // здесь и в manipulationwithComents
@@ -44,47 +43,8 @@ import { sanitize } from "./manipulationsWithComments.js"; // уйдет в кл
   };
   getFetchPromise();
 
-
-  //функция рендер
-  // const renderComments = () => {
-  //   const commentsHtml = comments.map((comment, index) => {
-  //     return `<li class="comment">
-  //         <div class="comment-header">
-  //           <div>${comment.name}</div>
-  //           <div>${addDateTimeofComments(comment.date)}</div>
-  //         </div>
-  //         <div class="comment-body">
-  //           <div class="comment-text">
-  //             ${comment.text}
-  //           </div>
-  //         </div>
-  //         <div class="comment-footer">
-  //           <div class="likes">
-  //             <span class="likes-counter">${comment.likeCounter}</span>
-  //             <button class="like-button ${comment.likeButton ? '-active-like' : ''}" data-index='${index}'></button>     
-  //           </div>
-  //         </div>
-  //       </li>`
-  //   })
-  //     .join("");
-  //   listOfCommentsElement.innerHTML = commentsHtml;
-  //   countLikes();
-  //   nonActiveButton();
-  //   answerComment();
-  // };
   //renderComments({comments});
-  //deleteComment({comments});
-
- 
-   
-
-  // функция удаления последнего комментария
-  // function deleteComment() {
-  //   deleteButtonEl.addEventListener('click', () => {
-  //     comments.pop();
-  //     renderComments();
-  //   })
-  // }
+  deleteComment({comments});
 
 
   // обработчик кнопки написать комментарий
@@ -125,7 +85,7 @@ import { sanitize } from "./manipulationsWithComments.js"; // уйдет в кл
         console.warn(error);
       })
   });
-
+  
 
   //добавление комментария через enter 
   // inputNameEl.addEventListener('keyup', (event) => {
