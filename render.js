@@ -1,12 +1,12 @@
-import { addDateTimeofComments } from "./timeDate.js";
-import { countLikes } from "./countLikes.js";
-import { answerComment,nonActiveButton } from "./manipulationsWithComments.js";
+import { addDateTimeofComments } from "./helpers.js";
+import { countLikes } from "./listeners.js";
+import { answerComment, nonActiveButton } from "./listeners.js";
 
 const listOfCommentsElement = document.getElementById('listOfComments');
 
-export const renderComments = ({comments}) => {
-      const commentsHtml = comments.map((comment, index) => {
-        return `<li class="comment">
+export const renderComments = ({ comments }) => {
+  const commentsHtml = comments.map((comment, index) => {
+    return `<li class="comment">
             <div class="comment-header">
               <div>${comment.name}</div>
               <div>${addDateTimeofComments(comment.date)}</div>
@@ -23,11 +23,10 @@ export const renderComments = ({comments}) => {
               </div>
             </div>
           </li>`
-      })
-        .join("");
-      listOfCommentsElement.innerHTML = commentsHtml;
-      countLikes({comments});
-      nonActiveButton({comments});
-      answerComment({comments});
-    };
-  
+  })
+    .join("");
+  listOfCommentsElement.innerHTML = commentsHtml;
+  countLikes({ comments });
+  nonActiveButton({ comments });
+  answerComment({ comments });
+};

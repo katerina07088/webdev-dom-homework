@@ -1,15 +1,17 @@
 import { renderComments } from "./render.js";
 import { postComments } from "./api.js";
 import { getFetchPromise } from "./main.js";
+import { sanitize } from "./helpers.js";
 
 const inputNameEl = document.getElementById('inputName');
 const textCommentEl = document.getElementById('textComment');
 const addFormButtonEl = document.getElementById('addFormButton');
 const deleteButtonEl = document.getElementById('delete-button');
 
+
 // обработчик кнопки написать комментарий
 export function addComment() {
-    addFormButtonEl.addEventListener('click', function (e) {
+  addFormButtonEl.addEventListener('click', function (e) {
     e.stopPropagation();
 
     inputNameEl.classList.remove('error');
@@ -29,9 +31,10 @@ export function addComment() {
     addFormButtonEl.disabled = true;
     addFormButtonEl.textContent = "Комментарий добавляется...";
 
-    const postFetch = postComments({
+    postComments({
       name: sanitize(inputNameEl.value),
-      text: sanitize(textCommentEl.value)} )
+      text: sanitize(textCommentEl.value)
+    })
       .then(() => {
         getFetchPromise();
         addFormButtonEl.disabled = false;
@@ -48,46 +51,58 @@ export function addComment() {
   });
 }
 
+// функции неактивной кнопки
+export function nonActiveButton() {
+  addFormButtonEl.disabled = true;
+  inputName.addEventListener('input', (event) => {
+    if (event.target.value.trim === '') {
+      addFormButtonEl.disabled = true;
+    } else {
+      addFormButtonEl.disabled = false;
+    }
+  })
+  textCommentEl.addEventListener('input', (event) => {
+    if (event.target.value.trim === '') {                   // что здесь значит target ?
+      addFormButtonEl.disabled = true;
+    } else {
+      addFormButtonEl.disabled = false;
+    }
+  })
+}
 
+// функция счетчика лайков
+export function countLikes({ comments }) {
+  const likeButtonElements = document.querySelectorAll('.like-button');
+  for (const likeEl of likeButtonElements) {
+    likeEl.addEventListener('click', function (e) {
+      e.stopPropagation();
+      const index = likeEl.dataset.index;
+      if (comments[index].likeButton) {
+        comments[index].likeButton = false;
+        comments[index].likeCounter--;
+      } else {
+        comments[index].likeButton = true;
+        comments[index].likeCounter++;
+      }
+      renderComments({ comments });
+    });
+  }
+}
 
 //функция ответа на комментарий
 export function answerComment({ comments }) {
-    const commentHTML = document.querySelectorAll('.comment');
-    commentHTML.forEach((el, i) => {
-        el.addEventListener('click', () => {
-            textCommentEl.value = `QUOTE_BEGIN ${comments[i].name}\n ${comments[i].text} QUOTE_END`;
-        })
+  const commentHTML = document.querySelectorAll('.comment');
+  commentHTML.forEach((el, i) => {
+    el.addEventListener('click', () => {
+      textCommentEl.value = `QUOTE_BEGIN ${comments[i].name}\n ${comments[i].text} QUOTE_END`;
     })
+  })
 }
 
 // функция удаления последнего комментария
-  export function deleteComment({comments}) {
-    deleteButtonEl.addEventListener('click', () => {
-      comments.pop();
-      renderComments({comments});
-    })
-  }
-
-// функции неактивной кнопки
-export function nonActiveButton() {
-    addFormButtonEl.disabled = true;
-    inputName.addEventListener('input', (event) => {
-        if (event.target.value.trim === '') {
-            addFormButtonEl.disabled = true;
-        } else {
-            addFormButtonEl.disabled = false;
-        }
-    })
-    textCommentEl.addEventListener('input', (event) => {
-        if (event.target.value.trim === '') {                   // что здесь значит target ?
-            addFormButtonEl.disabled = true;
-        } else {
-            addFormButtonEl.disabled = false;
-        }
-    })
-}
-
-// функция заменяющая теги на символы в тексте
-export function sanitize(text) {
-    return text.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('QUOTE_BEGIN', '<div class="quote">').replaceAll('QUOTE_END', '</div>');
+export function deleteComment({ comments }) {
+  deleteButtonEl.addEventListener('click', () => {
+    comments.pop();
+    renderComments({ comments });
+  })
 }
