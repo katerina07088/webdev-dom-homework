@@ -2,17 +2,19 @@
 
 import { getComments } from "./api.js";
 import { renderComments } from "./render.js";
-import { addComment, deleteComment } from "./listeners.js";
+//import { addComment, deleteComment } from "./listeners.js";
+//import { renderApp } from "./renderLogin.js";
 
 // элементы
-const commentHiddenEl = document.getElementById('commentHidden');
+
 
 // массив комментариев 
 let comments = [];
 
 // функция на получение данных из API
 export function getFetchPromise() {
-  commentHiddenEl.classList.remove('comment-hidden');
+  //const commentHiddenEl = document.getElementById('commentHidden');
+  //commentHiddenEl.classList.remove('comment-hidden');
   getComments()
     .then((reponseData) => {
       const appComments = reponseData.comments.map((comment) => {
@@ -25,15 +27,14 @@ export function getFetchPromise() {
         };
       })
       comments = appComments
-      commentHiddenEl.classList.add('comment-hidden');
+      //commentHiddenEl.classList.add('comment-hidden');
       renderComments({ comments })
-      deleteComment({ comments });
+      //deleteComment({ comments });
     })
     .catch((error) => {
       alert(error.message);
     })
 };
 getFetchPromise();
-addComment();
-
+//addComment();
 console.log("It works!");

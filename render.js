@@ -1,8 +1,11 @@
 import { addDateTimeofComments } from "./helpers.js";
-import { countLikes } from "./listeners.js";
-import { answerComment, nonActiveButton } from "./listeners.js";
+import { token } from "./api.js";
+import { renderLogin} from "./renderLogin.js"
+//import { countLikes } from "./listeners.js";
+//import { answerComment, nonActiveButton } from "./listeners.js";
 
-const listOfCommentsElement = document.getElementById('listOfComments');
+//const listOfCommentsElement = document.getElementById('listOfComments'); // уже видимо не нужна
+export const appElement = document.getElementById('app');  //тут ли его место???
 
 export const renderComments = ({ comments }) => {
   const commentsHtml = comments.map((comment, index) => {
@@ -25,8 +28,39 @@ export const renderComments = ({ comments }) => {
           </li>`
   })
     .join("");
-  listOfCommentsElement.innerHTML = commentsHtml;
-  countLikes({ comments });
-  nonActiveButton({ comments });
-  answerComment({ comments });
+
+  const appHtml = `<div id="container" class="container">
+    <div id="commentHidden" class="comment-style comment-hidden">
+      <p class="comment-text-hidden "> Комментарии загружаются ... </p>
+    </div>
+    <ul id="listOfComments" class="comments">${commentsHtml}</ul>
+    <div class="add-form">
+      <input id="inputName" type="text" class="add-form-name" placeholder="Введите ваше имя" />
+      <textarea id="textComment" type="textarea" class="add-form-text" placeholder="Введите ваш коментарий"
+        rows="4"></textarea>
+      <div class="add-form-row">
+        <button id="addFormButton" class="add-form-button">Написать</button>
+      </div>
+      <div>
+        <button id="delete-button" class="delete-form-button">Удалить последний комментарий</button>
+      </div>
+    </div>
+  </div>`
+  
+  if (token) {
+    appElement.innerHTML = appHtml;
+  } else{
+    appElement.innerHTML = commentsHtml + `<div class="login">Чтобы добавить комментарий, 
+    <a href="#" id="login-link" class="login-link">авторизуйтесь</a></div>`
+    
+  }
+    const loginLinkElement = document.getElementById('login-link'); // переход по ссылке авторизации
+    loginLinkElement.addEventListener("click", () => {
+      renderLogin();
+    });
+ 
+  
+  // countLikes({ comments });
+  // nonActiveButton({ comments });
+  // answerComment({ comments });
 };

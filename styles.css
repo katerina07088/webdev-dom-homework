@@ -177,3 +177,38 @@ body {
   .error {
     background-color: red;
   }
+
+
+
+  .link-login{
+    white-space: pre-line;
+    font-size: 16px;
+    font-family: Helvetica;
+  }
+  
+
+
+  .add-form-login{
+    display:flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 596px;
+    box-sizing: border-box;
+    background: radial-gradient(
+      75.42% 75.42% at 50% 42.37%,
+      rgba(53, 53, 53, 0) 22.92%,
+      #7334ea 100%
+    );
+    filter: drop-shadow(0px 20px 67px rgba(0, 0, 0, 0.08));
+    border-radius: 20px;
+  }
+  
+  .add-login{
+    font-size: 16px;
+    font-family: Helvetica;
+    border-radius: 8px;
+    border: none;
+    width: 500px;
+    padding: 11px 22px;
+  }
+  
