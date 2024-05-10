@@ -1,11 +1,10 @@
 import { addDateTimeofComments } from "./helpers.js";
 import { token } from "./api.js";
 import { renderLogin} from "./renderLogin.js"
-//import { countLikes } from "./listeners.js";
-//import { answerComment, nonActiveButton } from "./listeners.js";
+import { addComment, countLikes, answerComment, nonActiveButton } from "./listeners.js";
 
-//const listOfCommentsElement = document.getElementById('listOfComments'); // уже видимо не нужна
-export const appElement = document.getElementById('app');  //тут ли его место???
+
+export const appElement = document.getElementById('app'); 
 
 export const renderComments = ({ comments }) => {
   const commentsHtml = comments.map((comment, index) => {
@@ -29,7 +28,7 @@ export const renderComments = ({ comments }) => {
   })
     .join("");
 
-  const appHtml = `<div id="container" class="container">
+    const appHtml = `<div id="container" class="container">
     <div id="commentHidden" class="comment-style comment-hidden">
       <p class="comment-text-hidden "> Комментарии загружаются ... </p>
     </div>
@@ -46,21 +45,26 @@ export const renderComments = ({ comments }) => {
       </div>
     </div>
   </div>`
-  
+
+  const appNoLoginHtml = `<div id="container" class="container">
+  <div id="commentHidden" class="comment-style comment-hidden">
+    <p class="comment-text-hidden "> Комментарии загружаются ... </p>
+  </div>
+  <ul id="listOfComments" class="comments">${commentsHtml}</ul> 
+  <div class="login">Чтобы добавить комментарий, <a href="#" id="login-link" class="login-link">авторизуйтесь</a></div>
+  </div>`
+
   if (token) {
     appElement.innerHTML = appHtml;
   } else{
-    appElement.innerHTML = commentsHtml + `<div class="login">Чтобы добавить комментарий, 
-    <a href="#" id="login-link" class="login-link">авторизуйтесь</a></div>`
-    
+    appElement.innerHTML = appNoLoginHtml;
   }
     const loginLinkElement = document.getElementById('login-link'); // переход по ссылке авторизации
     loginLinkElement.addEventListener("click", () => {
       renderLogin();
     });
- 
-  
-  // countLikes({ comments });
-  // nonActiveButton({ comments });
-  // answerComment({ comments });
+  addComment();
+  countLikes({ comments });
+  nonActiveButton({ comments });
+  answerComment({ comments });
 };

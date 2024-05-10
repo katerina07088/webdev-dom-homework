@@ -2,10 +2,7 @@
 
 import { getComments } from "./api.js";
 import { renderComments } from "./render.js";
-//import { addComment, deleteComment } from "./listeners.js";
-//import { renderApp } from "./renderLogin.js";
-
-// элементы
+import { addComment, deleteComment } from "./listeners.js";
 
 
 // массив комментариев 
@@ -29,12 +26,13 @@ export function getFetchPromise() {
       comments = appComments
       //commentHiddenEl.classList.add('comment-hidden');
       renderComments({ comments })
-      //deleteComment({ comments });
+      deleteComment({ comments });
     })
     .catch((error) => {
-      alert(error.message);
+      console.log(error.message);  // потом вернуть alert
     })
+   //addComment();
 };
 getFetchPromise();
-//addComment();
+
 console.log("It works!");
