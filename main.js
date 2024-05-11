@@ -2,7 +2,7 @@
 
 import { getComments } from "./api.js";
 import { renderComments } from "./render.js";
-import { addComment, deleteComment } from "./listeners.js";
+import { addComment, deleteComment,countLikes, answerComment, nonActiveButton } from "./listeners.js";
 
 
 // массив комментариев 
@@ -35,5 +35,6 @@ export function getFetchPromise() {
    //addComment();
 };
 getFetchPromise();
+
 
 console.log("It works!");

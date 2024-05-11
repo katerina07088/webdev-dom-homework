@@ -1,9 +1,10 @@
-// render login
+
 import { getFetchPromise } from "./main.js"
-import { login, setToken } from "./api.js";
+import { login, setToken, setName, register } from "./api.js";
 import { appElement } from "./render.js";
 
 
+//renderLogin
 export const renderLogin = () => {
     const loginHtml =
         `<div class="container">
@@ -15,7 +16,7 @@ export const renderLogin = () => {
       <a href="#" id="link-to-register" class="link-to-register" >Зарегистрироваться</a>
     </div>
   </div>`
-    appElement.innerHTML = loginHtml;   //  вставленный блок в Html
+    appElement.innerHTML = loginHtml;   
 
     const buttonLoginElement = document.getElementById("login-button");
     const passwordInputElement = document.getElementById("password-input");
@@ -40,7 +41,7 @@ export const renderLogin = () => {
 
 //renderRegister
 export const renderRegister = () => {
-    const loginHTML =
+    const registerHTML =
     `<div class = "container">
     <div class = "register-form"
     <h3> Форма регистрации </h3>
@@ -51,7 +52,7 @@ export const renderRegister = () => {
       <a href="#" id="link-to-login" class = "link-to-login">Войти</a>    
       </div>
   </div>`
-    appElement.innerHTML = loginHTML;   //  вставленный блок в Html
+    appElement.innerHTML = registerHTML;   
 
     const buttonRegisterElement = document.getElementById("register-button");
     const loginInputElement = document.getElementById("login-register");
@@ -59,14 +60,23 @@ export const renderRegister = () => {
     const nameRegisterElement = document.getElementById('name-register');
     const linkToLoginElement= document.getElementById('link-to-login');
 
-    buttonRegisterElement.addEventListener("click", () => {    // тут будет другаялогика какая-то
-        login({
+    buttonRegisterElement.addEventListener("click", () => {  
+        register ({
+            name: nameRegisterElement.value,
             login: loginInputElement.value,
             password: passwordInputElement.value,
         }).then((responseData) => {
-            setToken(responseData.user.token);  // как понять этот путь? откуда его взяли?
-        });
-    });
+            console.log(responseData);
+            setToken(responseData.user.token);
+            setName(responseData.user.name);
+            //userId(responseData.user.id);       с этим потом разберусь
+          })
+          .then(() => {
+            getFetchPromise();
+          }).catch((error)=>{
+            alert(error.message)
+          })
+      })
   linkToLoginElement.addEventListener("click", () => {
     renderLogin();  
 });

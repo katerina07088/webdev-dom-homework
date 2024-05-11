@@ -84,7 +84,7 @@ export function countLikes({ comments }) {
         comments[index].likeButton = true;
         comments[index].likeCounter++;
       }
-      renderComments({ comments });
+      renderComments({ comments});
     });
   }
 }

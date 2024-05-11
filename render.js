@@ -1,12 +1,13 @@
 import { addDateTimeofComments } from "./helpers.js";
 import { token, setToken } from "./api.js";
-import { renderLogin } from "./renderLogin.js"
+import { renderLogin } from "./renderLoginAndRegister.js"
 import { addComment, countLikes, answerComment, nonActiveButton } from "./listeners.js";
+
 
 
 export const appElement = document.getElementById('app');
 
-export const renderComments = ({ comments }) => {
+export const renderComments = ({ comments}) => {
   const commentsHtml = comments.map((comment, index) => {
     return `<li class="comment">
             <div class="comment-header">
@@ -27,8 +28,8 @@ export const renderComments = ({ comments }) => {
           </li>`
   })
     .join("");
-
-  const appHtml = `<div id="container" class="container">
+   
+    const appHtml = `<div id="container" class="container">
     <div id="commentHidden" class="comment-style comment-hidden">
       <p class="comment-text-hidden "> Комментарии загружаются ... </p>
     </div>
@@ -63,7 +64,7 @@ export const renderComments = ({ comments }) => {
         renderLogin();
       });
     }
-    addComment();                          // куда их правильно поместить?
+    addComment();                          // куда их правильно поместить и какие аргументы передать? что изменить в них самих?
     countLikes({ comments });
     nonActiveButton({ comments });
     answerComment({ comments });
