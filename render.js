@@ -1,10 +1,10 @@
 import { addDateTimeofComments } from "./helpers.js";
-import { token } from "./api.js";
-import { renderLogin} from "./renderLogin.js"
+import { token, setToken } from "./api.js";
+import { renderLogin } from "./renderLogin.js"
 import { addComment, countLikes, answerComment, nonActiveButton } from "./listeners.js";
 
 
-export const appElement = document.getElementById('app'); 
+export const appElement = document.getElementById('app');
 
 export const renderComments = ({ comments }) => {
   const commentsHtml = comments.map((comment, index) => {
@@ -28,7 +28,7 @@ export const renderComments = ({ comments }) => {
   })
     .join("");
 
-    const appHtml = `<div id="container" class="container">
+  const appHtml = `<div id="container" class="container">
     <div id="commentHidden" class="comment-style comment-hidden">
       <p class="comment-text-hidden "> Комментарии загружаются ... </p>
     </div>
@@ -54,17 +54,44 @@ export const renderComments = ({ comments }) => {
   <div class="login">Чтобы добавить комментарий, <a href="#" id="login-link" class="login-link">авторизуйтесь</a></div>
   </div>`
 
-  if (token) {
-    appElement.innerHTML = appHtml;
-  } else{
-    appElement.innerHTML = appNoLoginHtml;
-  }
-    const loginLinkElement = document.getElementById('login-link'); // переход по ссылке авторизации
-    loginLinkElement.addEventListener("click", () => {
-      renderLogin();
-    });
-  addComment();
-  countLikes({ comments });
-  nonActiveButton({ comments });
-  answerComment({ comments });
-};
+    if (token) {
+      appElement.innerHTML = appHtml; 
+      } else {
+      appElement.innerHTML = appNoLoginHtml;
+      const loginLinkElement = document.getElementById('login-link'); // переход по ссылке авторизации
+      loginLinkElement.addEventListener("click", () => {
+        renderLogin();
+      });
+    }
+    addComment();                          // куда их правильно поместить?
+    countLikes({ comments });
+    nonActiveButton({ comments });
+    answerComment({ comments });
+  };
+
+  // const appHtml = `<div id="container" class="container">
+  //   <div id="commentHidden" class="comment-style comment-hidden">
+  //     <p class="comment-text-hidden "> Комментарии загружаются ... </p>
+  //   </div>
+  //   <ul id="listOfComments" class="comments">${commentsHtml}</ul>
+  //   ${setToken() ?
+  //     `<div class="add-form">
+  //     <input id="inputName" type="text" class="add-form-name" placeholder="Введите ваше имя" />
+  //     <textarea id="textComment" type="textarea" class="add-form-text" placeholder="Введите ваш коментарий"
+  //       rows="4"></textarea>
+  //     <div class="add-form-row">
+  //       <button id="addFormButton" class="add-form-button">Написать</button>
+  //     </div>
+  //     <div>
+  //       <button id="delete-button" class="delete-form-button">Удалить последний комментарий</button>
+  //     </div>
+  //   </div> `: `<div class="login">Чтобы добавить комментарий, <a href="#" id="login-link" class="login-link">авторизуйтесь</a></div>`
+  //   }
+  // </div>`
+  // appElement.innerHTML = appHtml;
+  // const loginLinkElement = document.getElementById('login-link'); // переход по ссылке авторизации
+  // loginLinkElement.addEventListener("click", () => {
+  //   renderLogin();
+  // })
+
+ 

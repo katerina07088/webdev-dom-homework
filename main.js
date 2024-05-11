@@ -10,8 +10,8 @@ let comments = [];
 
 // функция на получение данных из API
 export function getFetchPromise() {
-  //const commentHiddenEl = document.getElementById('commentHidden');
-  //commentHiddenEl.classList.remove('comment-hidden');
+  // const commentHiddenEl = document.getElementById('commentHidden');
+  // commentHiddenEl.classList.remove('comment-hidden');
   getComments()
     .then((reponseData) => {
       const appComments = reponseData.comments.map((comment) => {
@@ -23,10 +23,11 @@ export function getFetchPromise() {
           likeButton: false,
         };
       })
-      comments = appComments
-      //commentHiddenEl.classList.add('comment-hidden');
+      comments = appComments; 
       renderComments({ comments })
       deleteComment({ comments });
+      commentHiddenEl.classList.add('comment-hidden');
+     
     })
     .catch((error) => {
       console.log(error.message);  // потом вернуть alert
