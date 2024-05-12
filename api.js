@@ -29,7 +29,7 @@ export function getComments() {
     });
 }
 // функция на добавление коммента в api
-export function postComments({ name, text }) {
+export function postComments({ text }) {
   return fetch(userURL, {
     method: "POST",
     headers: {
@@ -37,7 +37,7 @@ export function postComments({ name, text }) {
     },
     body: JSON.stringify({
       text: text,
-      //forceError: true,
+      forceError: true,
     }),
   })
     .catch(() => {

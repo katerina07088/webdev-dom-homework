@@ -2,7 +2,7 @@
 
 import { getComments } from "./api.js";
 import { renderComments } from "./render.js";
-import { addComment, deleteComment,countLikes, answerComment, nonActiveButton } from "./listeners.js";
+import { addComment, deleteComment, countLikes, answerComment, nonActiveButton } from "./listeners.js";
 
 
 // массив комментариев 
@@ -23,16 +23,16 @@ export function getFetchPromise() {
           likeButton: false,
         };
       })
-      comments = appComments; 
+      comments = appComments;
       renderComments({ comments })
       deleteComment({ comments });
       commentHiddenEl.classList.add('comment-hidden');
-     
+
     })
     .catch((error) => {
       console.log(error.message);  // потом вернуть alert
     })
-   //addComment();
+  addComment();
 };
 getFetchPromise();
 

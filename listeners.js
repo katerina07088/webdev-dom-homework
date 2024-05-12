@@ -3,14 +3,14 @@ import { postComments } from "./api.js";
 import { getFetchPromise } from "./main.js";
 import { sanitize } from "./helpers.js";
 
-const inputNameEl = document.getElementById('inputName');
-const textCommentEl = document.getElementById('textComment');
-const addFormButtonEl = document.getElementById('addFormButton');
-const deleteButtonEl = document.getElementById('delete-button');
 
 
 // обработчик кнопки написать комментарий
 export function addComment() {
+  const inputNameEl = document.getElementById('inputName');
+  const textCommentEl = document.getElementById('textComment');
+  const addFormButtonEl = document.getElementById('addFormButton');
+ 
   addFormButtonEl.addEventListener('click', function (e) {
     e.stopPropagation();
 
@@ -32,7 +32,7 @@ export function addComment() {
     addFormButtonEl.textContent = "Комментарий добавляется...";
 
     postComments({
-      name: sanitize(inputNameEl.value),
+           //так ли?
       text: sanitize(textCommentEl.value)
     })
       .then(() => {
@@ -84,7 +84,7 @@ export function countLikes({ comments }) {
         comments[index].likeButton = true;
         comments[index].likeCounter++;
       }
-      renderComments({ comments});
+      renderComments({ comments });
     });
   }
 }
@@ -100,7 +100,10 @@ export function answerComment({ comments }) {
 }
 
 // функция удаления последнего комментария
+
 export function deleteComment({ comments }) {
+   const deleteButtonEl = document.getElementById('delete-button');
+
   deleteButtonEl.addEventListener('click', () => {
     comments.pop();
     renderComments({ comments });
