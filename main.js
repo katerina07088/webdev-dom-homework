@@ -2,7 +2,6 @@
 
 import { getComments } from "./api.js";
 import { renderComments } from "./render.js";
-import { addComment, deleteComment, countLikes, answerComment, nonActiveButton } from "./listeners.js";
 
 
 // массив комментариев 
@@ -10,8 +9,11 @@ let comments = [];
 
 // функция на получение данных из API
 export function getFetchPromise() {
-  // const commentHiddenEl = document.getElementById('commentHidden');
-  // commentHiddenEl.classList.remove('comment-hidden');
+  const appElement = document.getElementById('app');
+  const loader = document.createElement("div");
+  loader.textContent = "Комментарии загружаются...";
+  loader.classList.add("loader");
+  appElement.appendChild(loader);
   getComments()
     .then((reponseData) => {
       const appComments = reponseData.comments.map((comment) => {
@@ -25,16 +27,10 @@ export function getFetchPromise() {
       })
       comments = appComments;
       renderComments({ comments })
-      deleteComment({ comments });
-      commentHiddenEl.classList.add('comment-hidden');
-
     })
     .catch((error) => {
-      console.log(error.message);  // потом вернуть alert
+      console.log(error.message);
     })
-  addComment();
 };
 getFetchPromise();
-
-
 console.log("It works!");

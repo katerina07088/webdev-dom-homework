@@ -1,5 +1,5 @@
 const commentsURL = "https://wedev-api.sky.pro/api/v2/:korotenko/comments";
-const userURL = " https://wedev-api.sky.pro/api/user/login";
+const userLog = " https://wedev-api.sky.pro/api/user/login";
 const userReg = "https://wedev-api.sky.pro/api/user";
 
 // функция на переопределение token
@@ -7,10 +7,11 @@ export let token;
 export const setToken = (newToken) => {
   token = newToken;
 }
+
 //функция на имя 
-let userName = "";
+export let user;
 export const setName = (newName) => {
-  userName = newName;
+  user = newName;
 };
 
 // функция на получение комментов из api
@@ -30,7 +31,7 @@ export function getComments() {
 }
 // функция на добавление коммента в api
 export function postComments({ text }) {
-  return fetch(userURL, {
+  return fetch(commentsURL, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -56,7 +57,7 @@ export function postComments({ text }) {
 
 // функция на авторизацию
 export function login({ login, password }) {
-  return fetch(userURL, {
+  return fetch(userLog, {
     method: "POST",
     body: JSON.stringify({
       login,
@@ -68,7 +69,7 @@ export function login({ login, password }) {
 }
 
 // функция на регистрацию
-export function register({name, login, password}) {
+export function register({ name, login, password }) {
   return fetch(userReg, {
     method: "POST",
     body: JSON.stringify({
@@ -77,9 +78,9 @@ export function register({name, login, password}) {
       password: password,
     }),
   })
-  .then((response) => {
-    return response.json();
-  })
+    .then((response) => {
+      return response.json();
+    })
 };
 
 // export function deleteComment({ id }) {

@@ -11,7 +11,7 @@ export const renderLogin = () => {
     <div class = "login-form">
     <h3> Форма входа </h3>
     <input id="login-input" type="text" class="login-input" placeholder="Введите ваш логин " />
-    <input id="password-input" type="text" class="login-input" placeholder="Введите ваш пароль"></input>
+    <input id="password-input" type="password" class="login-input" placeholder="Введите ваш пароль"></input>
       <button id="login-button" class="login-button">Войти</button>
       <a href="#" id="link-to-register" class="link-to-register" >Зарегистрироваться</a>
     </div>
@@ -28,7 +28,8 @@ export const renderLogin = () => {
             login: loginInputElement.value,
             password: passwordInputElement.value,
         }).then((responseData) => {
-            setToken(responseData.user.token);  // как понять этот путь? откуда его взяли?
+            setToken(responseData.user.token);
+            setName(responseData.user.name);
         }).then(() => {
             getFetchPromise();
         });
@@ -47,7 +48,7 @@ export const renderRegister = () => {
     <h3> Форма регистрации </h3>
     <input id="name-register" type="text" class="register-input" placeholder="Введите ваше имя " />
     <input id="login-register" type="text" class="register-input" placeholder="Введите ваш логин"></input>
-    <input id="password-register" type="text" class="register-input" placeholder="Введите ваш пароль"></input>
+    <input id="password-register" type="password" class="register-input" placeholder="Введите ваш пароль"></input>
       <button id="register-button" class="register-button">Зарегистрироваться</button>
       <a href="#" id="link-to-login" class = "link-to-login">Войти</a>    
       </div>
@@ -66,7 +67,6 @@ export const renderRegister = () => {
             login: loginInputElement.value,
             password: passwordInputElement.value,
         }).then((responseData) => {
-            console.log(responseData);
             setToken(responseData.user.token);
             setName(responseData.user.name);
             //userId(responseData.user.id);       с этим потом разберусь

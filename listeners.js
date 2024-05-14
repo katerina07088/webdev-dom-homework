@@ -1,5 +1,5 @@
 import { renderComments } from "./render.js";
-import { postComments } from "./api.js";
+import { postComments, token } from "./api.js";
 import { getFetchPromise } from "./main.js";
 import { sanitize } from "./helpers.js";
 
@@ -7,10 +7,10 @@ import { sanitize } from "./helpers.js";
 
 // обработчик кнопки написать комментарий
 export function addComment() {
+
   const inputNameEl = document.getElementById('inputName');
   const textCommentEl = document.getElementById('textComment');
   const addFormButtonEl = document.getElementById('addFormButton');
- 
   addFormButtonEl.addEventListener('click', function (e) {
     e.stopPropagation();
 
@@ -32,7 +32,6 @@ export function addComment() {
     addFormButtonEl.textContent = "Комментарий добавляется...";
 
     postComments({
-           //так ли?
       text: sanitize(textCommentEl.value)
     })
       .then(() => {
@@ -53,14 +52,16 @@ export function addComment() {
 
 // функции неактивной кнопки
 export function nonActiveButton() {
+  const textCommentEl = document.getElementById('textComment');
+  const addFormButtonEl = document.getElementById('addFormButton');   // если добавляю элемент, становится неактивной, но потом и не просыпается
   addFormButtonEl.disabled = true;
-  inputName.addEventListener('input', (event) => {
-    if (event.target.value.trim === '') {
-      addFormButtonEl.disabled = true;
-    } else {
-      addFormButtonEl.disabled = false;
-    }
-  })
+  // inputName.addEventListener('input', (event) => {
+  //   if (event.target.value.trim === '') {
+  //     addFormButtonEl.disabled = true;
+  //   } else {
+  //     addFormButtonEl.disabled = false;
+  //   }
+  // })
   textCommentEl.addEventListener('input', (event) => {
     if (event.target.value.trim === '') {                   // что здесь значит target ?
       addFormButtonEl.disabled = true;
@@ -76,21 +77,26 @@ export function countLikes({ comments }) {
   for (const likeEl of likeButtonElements) {
     likeEl.addEventListener('click', function (e) {
       e.stopPropagation();
-      const index = likeEl.dataset.index;
-      if (comments[index].likeButton) {
-        comments[index].likeButton = false;
-        comments[index].likeCounter--;
+      if (token) {
+        const index = likeEl.dataset.index;
+        if (comments[index].likeButton) {
+          comments[index].likeButton = false;
+          comments[index].likeCounter--;
+        } else {
+          comments[index].likeButton = true;
+          comments[index].likeCounter++;
+        }
+        renderComments({ comments });
       } else {
-        comments[index].likeButton = true;
-        comments[index].likeCounter++;
+        alert("Авторизуйтесь")
       }
-      renderComments({ comments });
     });
   }
 }
 
 //функция ответа на комментарий
 export function answerComment({ comments }) {
+  const textCommentEl = document.getElementById('textComment');
   const commentHTML = document.querySelectorAll('.comment');
   commentHTML.forEach((el, i) => {
     el.addEventListener('click', () => {
@@ -102,8 +108,7 @@ export function answerComment({ comments }) {
 // функция удаления последнего комментария
 
 export function deleteComment({ comments }) {
-   const deleteButtonEl = document.getElementById('delete-button');
-
+  const deleteButtonEl = document.getElementById('delete-button');
   deleteButtonEl.addEventListener('click', () => {
     comments.pop();
     renderComments({ comments });
