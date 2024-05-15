@@ -1,8 +1,11 @@
 import { addDateTimeofComments } from "./helpers.js";
-import { countLikes } from "./listeners.js";
-import { answerComment, nonActiveButton } from "./listeners.js";
+import { token, user } from "./api.js";
+import { renderLogin } from "./renderLoginAndRegister.js"
+import { addComment, countLikes, answerComment, nonActiveButton, deleteComment } from "./listeners.js";
 
-const listOfCommentsElement = document.getElementById('listOfComments');
+
+
+export const appElement = document.getElementById('app');
 
 export const renderComments = ({ comments }) => {
   const commentsHtml = comments.map((comment, index) => {
@@ -25,8 +28,42 @@ export const renderComments = ({ comments }) => {
           </li>`
   })
     .join("");
-  listOfCommentsElement.innerHTML = commentsHtml;
-  countLikes({ comments });
-  nonActiveButton({ comments });
-  answerComment({ comments });
+
+  const appHtml = `<div id="container" class="container">
+   
+     <ul id="listOfComments" class="comments">${commentsHtml}</ul>
+    <div class="add-form">
+      <input id="inputName" type="text" readonly class="add-form-name" value="${user}"  />
+      <textarea id="textComment" type="textarea" class="add-form-text" placeholder="Введите ваш коментарий"
+        rows="4"></textarea>
+      <div class="add-form-row">
+        <button id="addFormButton" class="add-form-button">Написать</button>
+      </div>
+      <div>
+        <button id="delete-button" class="delete-form-button">Удалить последний комментарий</button>
+      </div>
+    </div>
+  </div>`
+
+  const appNoLoginHtml = `<div id="container" class="container">
+ 
+  <ul id="listOfComments" class="comments">${commentsHtml}</ul> 
+  <div class="login">Чтобы добавить комментарий, <a href="#" id="login-link" class="login-link">авторизуйтесь</a></div>
+  </div>`
+
+  if (token) {
+    appElement.innerHTML = appHtml;
+    addComment();
+    nonActiveButton({ comments });
+    answerComment({ comments });
+    countLikes({ comments });
+    deleteComment({ comments });
+  } else {
+    appElement.innerHTML = appNoLoginHtml;
+    const loginLinkElement = document.getElementById('login-link'); // переход по ссылке авторизации
+    loginLinkElement.addEventListener("click", () => {
+      renderLogin();
+    });
+    countLikes({ comments });
+  }
 };

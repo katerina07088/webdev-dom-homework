@@ -1,6 +1,22 @@
-export function getComments() {
+const commentsURL = "https://wedev-api.sky.pro/api/v2/:korotenko/comments";
+const userLog = " https://wedev-api.sky.pro/api/user/login";
+const userReg = "https://wedev-api.sky.pro/api/user";
 
-  return fetch("https://wedev-api.sky.pro/api/v1/:korotenko/comments", {
+// функция на переопределение token
+export let token;
+export const setToken = (newToken) => {
+  token = newToken;
+}
+
+//функция на имя 
+export let user;
+export const setName = (newName) => {
+  user = newName;
+};
+
+// функция на получение комментов из api
+export function getComments() {
+  return fetch(commentsURL, {
     method: "GET"
   })
     .catch(() => {
@@ -13,12 +29,14 @@ export function getComments() {
       return response.json();
     });
 }
-
-export function postComments({ name, text }) {
-  return fetch("https://wedev-api.sky.pro/api/v1/:korotenko/comments", {
+// функция на добавление коммента в api
+export function postComments({ text }) {
+  return fetch(commentsURL, {
     method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
     body: JSON.stringify({
-      name: name,
       text: text,
       forceError: true,
     }),
@@ -37,3 +55,41 @@ export function postComments({ name, text }) {
     });
 }
 
+// функция на авторизацию
+export function login({ login, password }) {
+  return fetch(userLog, {
+    method: "POST",
+    body: JSON.stringify({
+      login,
+      password,
+    }),
+  }).then((response) => {
+    return response.json();
+  })
+}
+
+// функция на регистрацию
+export function register({ name, login, password }) {
+  return fetch(userReg, {
+    method: "POST",
+    body: JSON.stringify({
+      name: name,
+      login: login,
+      password: password,
+    }),
+  })
+    .then((response) => {
+      return response.json();
+    })
+};
+
+// export function deleteComment({ id }) {
+//   return fetch(`${commentsURL}/${id}`, {     // почему такая запись? что она значит?
+//       method: "DELETE",
+//       headers: {
+//           Authorization: `Bearer ${token}`,
+//       }
+//   }).then((response) => {
+//       return response.json();
+//   })
+// }
