@@ -1,7 +1,8 @@
-import { addDateTimeofComments } from "./helpers.js";
+//import { addDateTimeofComments } from "./helpers.js";
 import { token, user } from "./api.js";
 import { renderLogin } from "./renderLoginAndRegister.js"
 import { addComment, countLikes, answerComment, nonActiveButton, deleteComment } from "./listeners.js";
+import { format } from "date-fns";
 
 
 
@@ -12,7 +13,7 @@ export const renderComments = ({ comments }) => {
     return `<li class="comment">
             <div class="comment-header">
               <div>${comment.name}</div>
-              <div>${addDateTimeofComments(comment.date)}</div>
+              <div>${format(new Date(comment.date),'yyyy-MM-dd hh.mm.ss')}</div>
             </div>
             <div class="comment-body">
               <div class="comment-text">
