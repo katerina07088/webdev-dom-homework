@@ -9,12 +9,14 @@
   "version": "1.0.0",
   "main": "main.js",
   "scripts": {
-    "dev": "webpack --mode development --watch"
+    "dev": "webpack --mode development --watch",
+    "format": "prettier --write ./scripts/"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "date-fns": "^3.6.0"
+    "date-fns": "^3.6.0",
+    "lodash": "^4.17.21"
   }
 }

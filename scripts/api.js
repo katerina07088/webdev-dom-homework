@@ -6,9 +6,9 @@ const userReg = "https://wedev-api.sky.pro/api/user";
 export let token;
 export const setToken = (newToken) => {
   token = newToken;
-}
+};
 
-//функция на имя 
+//функция на имя
 export let user;
 export const setName = (newName) => {
   user = newName;
@@ -17,14 +17,14 @@ export const setName = (newName) => {
 // функция на получение комментов из api
 export function getComments() {
   return fetch(commentsURL, {
-    method: "GET"
+    method: "GET",
   })
     .catch(() => {
-      throw new Error('Кажется, у вас сломался интернет, попробуйте позже');
+      throw new Error("Кажется, у вас сломался интернет, попробуйте позже");
     })
     .then((response) => {
       if (response.status === 500) {
-        throw new Error("Сервер сломался, попробуй позже")
+        throw new Error("Сервер сломался, попробуй позже");
       }
       return response.json();
     });
@@ -42,15 +42,15 @@ export function postComments({ text }) {
     }),
   })
     .catch(() => {
-      throw new Error('Кажется, у вас сломался интернет, попробуйте позже');
+      throw new Error("Кажется, у вас сломался интернет, попробуйте позже");
     })
     .then((response) => {
       if (response.status === 201) {
         return response.json();
       } else if (response.status === 500) {
-        throw new Error('Сервер сломался, попробуй позже');
+        throw new Error("Сервер сломался, попробуй позже");
       } else {
-        throw new Error('Имя и комментарий должны быть не короче 3 символов')
+        throw new Error("Имя и комментарий должны быть не короче 3 символов");
       }
     });
 }
@@ -65,7 +65,7 @@ export function login({ login, password }) {
     }),
   }).then((response) => {
     return response.json();
-  })
+  });
 }
 
 // функция на регистрацию
@@ -77,11 +77,10 @@ export function register({ name, login, password }) {
       login: login,
       password: password,
     }),
-  })
-    .then((response) => {
-      return response.json();
-    })
-};
+  }).then((response) => {
+    return response.json();
+  });
+}
 
 // export function deleteComment({ id }) {
 //   return fetch(`${commentsURL}/${id}`, {     // почему такая запись? что она значит?
