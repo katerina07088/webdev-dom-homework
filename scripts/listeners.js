@@ -3,28 +3,26 @@ import { postComments, token } from "./api.js";
 import { getFetchPromise } from "./main.js";
 import { sanitize } from "./helpers.js";
 
-
-
 // обработчик кнопки написать комментарий
 export function addComment() {
-
-  const inputNameEl = document.getElementById('inputName');
-  const textCommentEl = document.getElementById('textComment');
-  const addFormButtonEl = document.getElementById('addFormButton');
-  addFormButtonEl.addEventListener('click', function (e) {
+  const inputNameEl = document.getElementById("inputName");
+  const textCommentEl = document.getElementById("textComment");
+  const addFormButtonEl = document.getElementById("addFormButton");
+  addFormButtonEl.addEventListener("click", function (e) {
     e.stopPropagation();
 
-    inputNameEl.classList.remove('error');
-    textCommentEl.classList.remove('error');
-    if (inputNameEl.value.trim() === '' && textCommentEl.value.trim() === '') {
-      inputNameEl.classList.add('error');
-      textCommentEl.classList.add('error');
+    inputNameEl.classList.remove("error");
+    textCommentEl.classList.remove("error");
+    if (inputNameEl.value.trim() === "" && textCommentEl.value.trim() === "") {
+      inputNameEl.classList.add("error");
+      textCommentEl.classList.add("error");
       return;
-    } if (inputNameEl.value.trim() === '') {
-      inputNameEl.classList.add('error');
+    }
+    if (inputNameEl.value.trim() === "") {
+      inputNameEl.classList.add("error");
       return;
-    } else if (textCommentEl.value.trim() === '') {
-      textCommentEl.classList.add('error');
+    } else if (textCommentEl.value.trim() === "") {
+      textCommentEl.classList.add("error");
       return;
     }
 
@@ -32,7 +30,7 @@ export function addComment() {
     addFormButtonEl.textContent = "Комментарий добавляется...";
 
     postComments({
-      text: sanitize(textCommentEl.value)
+      text: sanitize(textCommentEl.value),
     })
       .then(() => {
         getFetchPromise();
@@ -46,14 +44,14 @@ export function addComment() {
         addFormButtonEl.textContent = "Написать";
         alert(error.message);
         console.warn(error);
-      })
+      });
   });
 }
 
 // функции неактивной кнопки
 export function nonActiveButton() {
-  const textCommentEl = document.getElementById('textComment');
-  const addFormButtonEl = document.getElementById('addFormButton');   // если добавляю элемент, становится неактивной, но потом и не просыпается
+  const textCommentEl = document.getElementById("textComment");
+  const addFormButtonEl = document.getElementById("addFormButton"); // если добавляю элемент, становится неактивной, но потом и не просыпается
   addFormButtonEl.disabled = true;
   // inputName.addEventListener('input', (event) => {
   //   if (event.target.value.trim === '') {
@@ -62,20 +60,21 @@ export function nonActiveButton() {
   //     addFormButtonEl.disabled = false;
   //   }
   // })
-  textCommentEl.addEventListener('input', (event) => {
-    if (event.target.value.trim === '') {                   // что здесь значит target ?
+  textCommentEl.addEventListener("input", (event) => {
+    if (event.target.value.trim === "") {
+      // что здесь значит target ?
       addFormButtonEl.disabled = true;
     } else {
       addFormButtonEl.disabled = false;
     }
-  })
+  });
 }
 
 // функция счетчика лайков
 export function countLikes({ comments }) {
-  const likeButtonElements = document.querySelectorAll('.like-button');
+  const likeButtonElements = document.querySelectorAll(".like-button");
   for (const likeEl of likeButtonElements) {
-    likeEl.addEventListener('click', function (e) {
+    likeEl.addEventListener("click", function (e) {
       e.stopPropagation();
       if (token) {
         const index = likeEl.dataset.index;
@@ -88,7 +87,7 @@ export function countLikes({ comments }) {
         }
         renderComments({ comments });
       } else {
-        alert("Авторизуйтесь")
+        alert("Авторизуйтесь");
       }
     });
   }
@@ -96,21 +95,21 @@ export function countLikes({ comments }) {
 
 //функция ответа на комментарий
 export function answerComment({ comments }) {
-  const textCommentEl = document.getElementById('textComment');
-  const commentHTML = document.querySelectorAll('.comment');
+  const textCommentEl = document.getElementById("textComment");
+  const commentHTML = document.querySelectorAll(".comment");
   commentHTML.forEach((el, i) => {
-    el.addEventListener('click', () => {
+    el.addEventListener("click", () => {
       textCommentEl.value = `QUOTE_BEGIN ${comments[i].name}\n ${comments[i].text} QUOTE_END`;
-    })
-  })
+    });
+  });
 }
 
 // функция удаления последнего комментария
 
 export function deleteComment({ comments }) {
-  const deleteButtonEl = document.getElementById('delete-button');
-  deleteButtonEl.addEventListener('click', () => {
+  const deleteButtonEl = document.getElementById("delete-button");
+  deleteButtonEl.addEventListener("click", () => {
     comments.pop();
     renderComments({ comments });
-  })
+  });
 }
